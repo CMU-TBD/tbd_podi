@@ -9,6 +9,10 @@
 <!-- ## TODOs
 
 ## [Unreleased] -->
+## [1.1.1] - 2020-04-30
+#### Changed
+- Incorrect topic publishing name for front camera changed from `podi/front_camera/podi/image_raw` to `podi/front_camera/image_raw`
+
 ## [1.1.0] - 2020-04-23
 #### Added
 - `tbd_podi_2dnav` that acts an interface for ROS Navigation packages. Migrated in old settings from other podi repositories.
