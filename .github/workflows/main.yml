@@ -42,7 +42,6 @@ jobs:
           source /opt/ros/${{matrix.ros_distributions}}/setup.bash
           cd ros_ws
           ls -a -l
-          catkin clean --yes
           catkin build -DPYTHON_VERSION=3
 
       
