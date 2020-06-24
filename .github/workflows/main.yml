@@ -40,7 +40,6 @@ jobs:
       - name: Catkin Build
         run: |
           source /opt/ros/${{matrix.ros_distributions}}/setup.bash
-          source venv/bin/activate
           cd ros_ws
           ls -a -l
           catkin clean --yes
