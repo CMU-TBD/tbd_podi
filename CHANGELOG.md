@@ -8,6 +8,11 @@
 ## [0.2.0] - 2020-04-17 -->
 <!-- ## TODOs
 ## [Unreleased] -->
+
+## [1.1.4] - 2020-06-23
+#### Changed
+- Remove `navigation` from `package.xml`
+
 ## [1.1.3] - 2020-06-12
 #### Changed
 - Changed podi laserscanner's type from `gpu_ray` to `ray`
