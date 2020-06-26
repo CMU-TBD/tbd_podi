@@ -6,7 +6,7 @@ name: Building
 # events but only for the master branch
 on:
   push:
-    branches: [ master, zhi-github-action, prithu-dev ]
+    branches: [ master, zhi-github-action]
   pull_request:
     branches: [ master ]
 
