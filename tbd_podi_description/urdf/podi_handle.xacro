@@ -21,11 +21,7 @@
         </collision>
     </link>
     <link name="handle_bottom_plate">
-        <inertial>
-            <mass value="1" />
-            <origin xyz="0 0 0" />
-            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
-        </inertial>
+        <xacro:box_inertial x="0.09" y="0.21" z="0.005" mass="1" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>

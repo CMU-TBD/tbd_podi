@@ -29,11 +29,7 @@
     </gazebo>
 
     <link name="top_plate">
-        <inertial>
-            <mass value="0.01"/>
-            <origin xyz="0 0 0"/>
-            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
-        </inertial>
+        <xacro:box_inertial x="0.45" y="0.38" z="0.01" mass="0.5" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
@@ -127,7 +123,7 @@
     </joint>
     <link name="caster_swivel">
         <inertial>
-            <mass value="0.1"/>
+            <mass value="0.01"/>
             <origin xyz="0 0 0"/>
             <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
         </inertial>
@@ -156,11 +152,7 @@
     </joint>
 
     <link name="caster_wheel">
-        <inertial>
-            <mass value="0.1"/>
-            <origin xyz="0 0 0"/>
-            <inertia ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983" iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943"/>
-        </inertial>
+        <xacro:cylinder_inertial radius="0.0375" length="0.01" mass="0.5" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">

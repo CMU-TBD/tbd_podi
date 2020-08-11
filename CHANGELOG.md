@@ -9,6 +9,9 @@
 <!-- ## TODOs
 ## [Unreleased] -->
 
+## [1.1.5] - 2020-08-11
+- **[Changed]** Tweaked the inertia models of podi to try improve odom readings.
+
 ## [1.1.4] - 2020-06-23
 #### Changed
 - Remove `navigation` from `package.xml`

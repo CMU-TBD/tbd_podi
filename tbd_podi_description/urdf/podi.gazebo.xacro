@@ -12,7 +12,7 @@
       <wheelTorque>15</wheelTorque>
       <publishWheelJointState>true</publishWheelJointState>
       <publishWheelTF>false</publishWheelTF>
-      <wheelAcceleration>1.8</wheelAcceleration>
+      <wheelAcceleration>1</wheelAcceleration>
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>

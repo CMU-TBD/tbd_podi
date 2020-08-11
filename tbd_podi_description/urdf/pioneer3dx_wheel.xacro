@@ -6,13 +6,11 @@
   <xacro:macro name="p3dx_wheel" params="suffix reflect parent">
 
     <link name="${suffix}_wheel">
-      <inertial>
-        <mass value="0.5"/>
-        <origin xyz="0 0 0"/>
-        <inertia ixx="0.012411765597" ixy="0" ixz="0" iyy="0.015218160428" iyz="0" izz="0.011763977943"/>
-      </inertial>
+      <xacro:hollow_cylinder_inertial radius="0.09" inner_radius="0.05" length="0.04" mass="1" />
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
+        <!-- The wheel isn't a perfect cylinder. -->
+        <!-- Radius: 0.09, inner radius:0.05, length:0.04 -->
         <geometry name="pioneer_geom">
           <mesh filename="package://tbd_podi_description/meshes/p3dx_meshes/${suffix}_wheel.stl"/>
         </geometry>
@@ -23,7 +21,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="${-3.1415927/2} 0 0"/>
         <geometry>
-          <cylinder radius="0.09" length="0.01"/>
+          <cylinder radius="0.09" length="0.04"/>
         </geometry>
       </collision>
     </link>
@@ -37,13 +35,15 @@
     </joint>
 
     <link name="${suffix}_hubcap">
+      <!-- It's a big hard to model the exact inertia, so let's ignore it here. -->
       <inertial>
-        <mass value="0.01"/>
+        <mass value="0.00"/>
         <origin xyz="0 0 0"/>
         <inertia ixx="0.012411765597" ixy="0" ixz="0" iyy="0.015218160428" iyz="0" izz="0.011763977943"/>
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
+        <!-- It is actually two disk shape object on both side of the wheel -->
         <geometry name="pioneer_geom">
           <mesh filename="package://tbd_podi_description/meshes/p3dx_meshes/${suffix}_hubcap.stl"/>
         </geometry>
@@ -54,7 +54,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="0 0 0"/>
+          <cylinder radius="0.05" length="0.03"/>
         </geometry>
       </collision>
     </link>
