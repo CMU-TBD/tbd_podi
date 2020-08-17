@@ -102,35 +102,22 @@
     </joint>
 
 
-    <link name="${robotname}_front_camera">
+    <link name="${robotname}_camera_mount">
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0001" />
             <origin xyz="0 0 0" />
             <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
         </inertial>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry name="zed">
-                <mesh filename="package://tbd_podi_description/meshes/zed.stl"/>
-            </geometry>
-            <material name="laser_scanner_color">
-                <color rgba="1 1 1 1"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry name="zed">
-                <mesh filename="package://tbd_podi_description/meshes/zed.stl"/>
-            </geometry>
-        </collision>
     </link>
 
-   <joint name="camera_to_screen_joint" type="fixed">
-        <origin xyz="0 0 ${face_screen_height/2 + 0.025}" rpy="0 0 0"/>
+   <joint name="camera_mount_to_screen_joint" type="fixed">
+        <origin xyz="0.025 0 ${face_screen_height/2 + 0.025}" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
         <parent link="${robotname}_face_screen"/>
-        <child link="${robotname}_front_camera"/>
+        <child link="${robotname}_camera_mount"/>
     </joint>    
 
+    <!-- Include Azure Kinect -->
+    <xacro:insert_azure_kinect parent="${robotname}_camera_mount" tf_prefix=""/>
 
 </robot>

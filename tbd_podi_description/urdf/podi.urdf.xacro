@@ -5,8 +5,10 @@
 
     <xacro:property name="robotname" value="podi" />
     
-    <!-- Inport inertia functions -->
+    <!-- Inport helper functions -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/inertia_tensors.xacro"/>
+    <xacro:include filename="$(find tbd_podi_description)/urdf/azure_kinect.urdf.xacro"/>
+
 
     <!-- Import the base robot -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/pioneer3dx.urdf.xacro"/>
