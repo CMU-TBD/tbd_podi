@@ -9,6 +9,10 @@
 <!-- ## TODOs
 ## [Unreleased] -->
 
+## [1.2.0] - 2020-08-28
+- **[Added]** Merged in simulation gazebo package to simplify dependencies.
+- **[Changed]** Migrated all files to be runnable on ROS Noetic (updated CMAKE file etc.) 
+
 ## [1.1.5] - 2020-08-17
 - **[Changed]** Tweaked the inertia models of podi to try improve odom readings.
 - **[Added]** Modified Azure Kinect URDF.
