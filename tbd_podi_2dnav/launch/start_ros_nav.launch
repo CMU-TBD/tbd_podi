@@ -5,7 +5,7 @@
     <arg name="robot_command_topic" default="cmd_vel" />
     <arg name="robot_laser_topic"   default="podi/laser" />
     <arg name="robot_odom_topic"    default="podi/odom" />
-    <arg name="map_path"            default="$(find tbd_podi_2dnav)/maps/sim_NSH_04_2020.yaml" />
+    <arg name="map_path"            default="$(find tbd_podi_2dnav)/maps/nshA.yaml" />
     <arg name="initial_pose_x"      default="0" />
     <arg name="initial_pose_y"      default="0" />
     <arg name="initial_pose_a"      default="0" />

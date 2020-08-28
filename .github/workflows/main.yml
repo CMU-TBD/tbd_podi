@@ -17,20 +17,20 @@ jobs:
     strategy:
       matrix:
         ros_distributions: 
-          - melodic
+          - noetic
     # The type of runner that the job will run on
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-
+      - uses: ros-tooling/setup-ros@0.0.25
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}   
       - name: Create Workspace
         run: "mkdir -p ros_ws/src"  
-        
       - uses: actions/checkout@v2
         with:
           path: ros_ws/src/tbd_podi
-          
       - uses: actions/checkout@v2
         with:
           repository: cmu-tbd/tbd_screen_face
@@ -41,7 +41,6 @@ jobs:
         run: |
           source /opt/ros/${{matrix.ros_distributions}}/setup.bash
           cd ros_ws
-          ls -a -l
-          catkin build -DPYTHON_VERSION=3
+          catkin_make_isolated
 
       

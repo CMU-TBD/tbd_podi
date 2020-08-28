@@ -21,10 +21,4 @@
 
     <!-- Gazebo -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/podi.gazebo.xacro"/>
-
-    <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>/podi</robotNamespace>
-    </plugin>
-    </gazebo>
 </robot>

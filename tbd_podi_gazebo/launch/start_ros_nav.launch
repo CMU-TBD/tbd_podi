@@ -1,0 +1,21 @@
+<launch>
+
+    <arg name="launch_rviz"             default="false" />
+    <arg name="rviz_config_path"        default="$(find tbd_podi_gazebo)/rviz/2dnav.rviz" />
+    <arg name="initial_pose_x"          default="0" />
+    <arg name="initial_pose_y"          default="0" />
+    <arg name="initial_pose_a"          default="0" />
+    <arg name="map_path"                default="$(find tbd_podi_gazebo)/maps/sim_NSH_04_2020.yaml" />
+
+
+    <!-- Start ROS Navigation -->
+    <include file="$(find tbd_podi_2dnav)/launch/start_ros_nav.launch">
+        <arg name="initial_pose_x"      value="$(arg initial_pose_x)" />
+        <arg name="initial_pose_y"      value="$(arg initial_pose_y)" />
+        <arg name="initial_pose_a"      value="$(arg initial_pose_a)" />
+        <arg name="map_path"            value="$(arg map_path)" />
+    </include>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_path)" required="true" if="$(arg launch_rviz)"/>
+    
+</launch>

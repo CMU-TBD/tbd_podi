@@ -1,0 +1,13 @@
+<launch>
+    <arg name="model_name" default="podi" />
+    <arg name="robot_name" default="podi" />
+    <arg name="model_x" default="0" />
+    <arg name="model_y" default="0" />
+    <arg name="model_z" default="0" />
+    <arg name="model_yaw" default="0" />
+    <arg name="xacro_file" default="$(find tbd_podi_description)/urdf/podi.urdf.xacro"/>
+
+    <param name="$(arg robot_name)/robot_description" command="$(find xacro)/xacro $(arg xacro_file)" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg model_name) -x $(arg model_x) -y $(arg model_y) -z $(arg model_z) -Y $(arg model_yaw) -param $(arg robot_name)/robot_description" respawn="false" output="screen" />
+
+</launch>

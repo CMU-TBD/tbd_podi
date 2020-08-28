@@ -61,7 +61,7 @@
       </ray>
       <plugin name="${robotname}_front_lidar_controller" filename="libgazebo_ros_laser.so">
         <topicName>laser</topicName>
-        <frameName>laser_scanner</frameName>
+        <frameName>${robotname}/laser_scanner</frameName>
         <robotNamespace>${robotname}</robotNamespace>
       </plugin>
     </sensor>

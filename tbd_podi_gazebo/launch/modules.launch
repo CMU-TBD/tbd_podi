@@ -1,0 +1,26 @@
+<launch>
+
+    <arg name="use_joy"                 default="false" />
+    <arg name="launch_rviz"             default="false" />
+    <arg name="rviz_config_path"        default="$(find tbd_podi_gazebo)/rviz/simple.rviz" />
+    <arg name="robot_name"              default="podi" />    
+
+    <!-- Start the low level controllers -->
+    <include file="$(find tbd_podi_common)/launch/control_robot_laser.launch" >
+        <arg name="sim"                         value="true" />
+        <arg name="use_joy"                     value="$(arg use_joy)" />
+        <arg name="motor_topic_name"            value="/podi/cmd_vel" />
+		<arg name="launch_rviz"				    value="$(arg launch_rviz)"/>
+		<arg name="rviz_config_path"		    value="$(arg rviz_config_path)"/>
+        <arg name="incoming_laser_topic_name"	value="$(arg robot_name)/laser" />
+        <arg name="trans_laser_topic_name"	    value="$(arg robot_name)/fixed_laser" />
+        <arg name="robot_name"		            value="$(arg robot_name)" />
+    </include>
+
+    <!-- Start Podi's Face -->
+    <include file="$(find tbd_podi_face)/launch/run.launch">
+        <arg name="sim" value="true" />
+        <arg name="topic_name" value="$(arg robot_name)/screen_face" />
+    </include>
+
+</launch>
