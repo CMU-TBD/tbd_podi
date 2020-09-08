@@ -1,0 +1,37 @@
+repositories:
+  gazebo_ros_pkgs:
+    type: git
+    url: https://github.com/ros-simulation/gazebo_ros_pkgs.git
+    version: noetic-devel
+  moveit_msgs:
+    type: git
+    url: https://github.com/ros-planning/moveit_msgs.git
+    version: master
+  navigation:
+    type: git
+    url: https://github.com/ros-planning/navigation.git
+    version: noetic-devel
+  robot_state_publisher:
+    type: git
+    url: https://github.com/ros/robot_state_publisher.git
+    version: melodic-devel
+  tbd_podi:
+    type: git
+    url: git@github.com:CMU-TBD/tbd_podi.git
+    version: zhi/noetic-devel
+  tbd_podi_screen_android:
+    type: git
+    url: git@github.com:CMU-TBD/TBD_podi_face.git
+    version: master
+  tbd_ros_gazebo:
+    type: git
+    url: git@github.com:CMU-TBD/tbd_ros_gazebo.git
+    version: main
+  tbd_ros_msgs:
+    type: git
+    url: git@github.com:CMU-TBD/tbd_ros_msgs
+    version: master
+  tbd_screen_face:
+    type: git
+    url: git@github.com:CMU-TBD/tbd_robot_face.git
+    version: master

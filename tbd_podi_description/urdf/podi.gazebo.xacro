@@ -98,6 +98,25 @@
     </sensor>
   </gazebo>
 
-
+  <gazebo reference="camera_base">
+    <gravity>true</gravity>
+    <sensor type="imu_sensor" name="azure_imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>      
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <robotNamespace>${robotname}</robotNamespace>
+        <topicName>imu</topicName>
+        <bodyName>${robotname}/camera_base</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>${robotname}/camera_base</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
 
 </robot>
