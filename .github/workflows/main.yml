@@ -31,7 +31,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: cmu-tbd/tbd_screen_face
-          token: ${{secrets.ZHI_PAT_FOR_CI}}
           path: ros_ws/src/tbd_screen_face
       - name: Install ROS dependencies
         run: |
