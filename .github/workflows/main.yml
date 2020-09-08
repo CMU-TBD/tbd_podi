@@ -37,7 +37,7 @@ jobs:
         run: |
           rosdep update
           cd ros_ws
-          rosdep install --from-paths src --ignore-src
+          rosdep install --from-paths src --ignore-src --rosdistro noetic
       - name: Catkin Build
         run: |
           source /opt/ros/noetic/setup.bash
