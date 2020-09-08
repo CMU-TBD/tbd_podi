@@ -35,7 +35,6 @@ jobs:
           path: ros_ws/src/tbd_screen_face
       - name: Install ROS dependencies
         run: |
-          rosdep init
           rosdep update
           cd ros_ws
           rosdep install --from-paths src --ignore-src
