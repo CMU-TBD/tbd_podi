@@ -67,7 +67,7 @@
     </sensor>
   </gazebo>
 
-  <gazebo reference="${robotname}_display">
+  <gazebo reference="display">
     <visual>
       <plugin name="screen_video_controller" filename="libgazebo_ros_video.so">
         <height>1280</height>
@@ -78,7 +78,7 @@
     </visual>
   </gazebo>
 
-  <gazebo reference="camera_base">
+  <gazebo reference="zed_left_camera_optical_frame">
     <sensor type="depth" name="front_depth_camera">
       <update_rate>30.0</update_rate>
       <camera name="front_camera">
@@ -90,15 +90,15 @@
         </image>
       </camera>
       <plugin name="head_depth_camera" filename="libgazebo_ros_depth_camera.so">
-        <cameraName>azure_kinect</cameraName>
-        <frameName>camera_point</frameName>
+        <cameraName>front_camera</cameraName>
+        <frameName>${robotname}/zed_left_camera_optical_frame</frameName>
         <robotNamespace>${robotname}</robotNamespace>
         <pointCloudCutoff>2.0</pointCloudCutoff>
       </plugin>
     </sensor>
   </gazebo>
 
-  <gazebo reference="camera_base">
+  <!-- <gazebo reference="zed_left_camera_optical_frame">
     <gravity>true</gravity>
     <sensor type="imu_sensor" name="azure_imu">
       <always_on>true</always_on>
@@ -117,6 +117,6 @@
       </plugin>
       <pose>0 0 0 0 0 0</pose>
     </sensor>
-  </gazebo>
+  </gazebo> -->
 
 </robot>

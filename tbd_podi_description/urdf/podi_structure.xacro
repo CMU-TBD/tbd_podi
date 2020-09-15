@@ -30,7 +30,7 @@
     <xacro:property name="face_screen_width" value="0.006" />
     <xacro:property name="face_screen_height" value="0.2373" />
     <xacro:property name="face_screen_length" value="0.169" />
-    <link name="${robotname}_face_screen">
+    <link name="face_screen">
         <xacro:box_inertial x="${face_screen_width}" y="${face_screen_length}" z="${face_screen_height}" mass="0.429" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -60,7 +60,7 @@
     <joint name="head_to_screen_joint" type="fixed">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="head"/>
-        <child link="${robotname}_face_screen"/>
+        <child link="face_screen"/>
     </joint>
 
     <joint name="screen_to_laser_scanner_joint" type="fixed">
@@ -72,7 +72,7 @@
     <xacro:property name="display_width" value="0.01" />
     <xacro:property name="display_height" value="0.10125" />
     <xacro:property name="display_length" value="0.18" />
-    <link name="${robotname}_display">
+    <link name="display">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -83,7 +83,7 @@
             <geometry>
                 <box size=" ${display_length} ${display_height} ${display_width}" />
             </geometry>
-            <material name="${robotname}_display_color">
+            <material name="$display_color">
                 <color rgba="0 0 0 1"/>
             </material>
         </visual>
@@ -97,27 +97,31 @@
 
     <joint name="display_to_screen_joint" type="fixed">
         <origin xyz="0.01 0 0" rpy="${3.1415927/2.0} 0 ${3.1415927/2.0}"/>
-        <parent link="${robotname}_face_screen"/>
-        <child link="${robotname}_display"/>
+        <parent link="face_screen"/>
+        <child link="display"/>
     </joint>
 
+   <joint name="camera_mount_to_screen_joint" type="fixed">
+        <origin xyz="0.025 0 ${face_screen_height/2 + 0.025}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <parent link="face_screen"/>
+        <child link="front_camera_mount"/>
+    </joint>
 
-    <link name="${robotname}_camera_mount">
+    <xacro:arg name="base_frame" default="front_camera_mount"/>
+    <xacro:arg name="camera_model" default="zed2"/>
+    <xacro:include filename="$(find tbd_podi_description)/urdf/zed_descr.urdf.xacro">
+    </xacro:include>
+    <!-- camera_name="zed2" camera_model="zed2" base_frame="${robotname_camera_mount}"/> -->
+
+    <!-- Include Azure Kinect -->
+    <!-- <xacro:insert_azure_kinect parent="front_camera_mount" tf_prefix=""/> -->
+    <!-- <link name="front_camera_mount">
         <inertial>
             <mass value="0.0001" />
             <origin xyz="0 0 0" />
             <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
         </inertial>
     </link>
-
-   <joint name="camera_mount_to_screen_joint" type="fixed">
-        <origin xyz="0.025 0 ${face_screen_height/2 + 0.025}" rpy="0 0 0"/>
-        <axis xyz="0 1 0"/>
-        <parent link="${robotname}_face_screen"/>
-        <child link="${robotname}_camera_mount"/>
-    </joint>    
-
-    <!-- Include Azure Kinect -->
-    <xacro:insert_azure_kinect parent="${robotname}_camera_mount" tf_prefix=""/>
-
+     -->
 </robot>
