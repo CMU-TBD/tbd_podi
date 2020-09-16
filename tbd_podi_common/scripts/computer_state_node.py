@@ -59,4 +59,5 @@ class PodiComputerState():
 if __name__ == "__main__":
     rospy.init_node("computer_state_node")
     pcs = PodiComputerState()
+    rospy.loginfo("Starting podi computer state node")
     pcs.spin()

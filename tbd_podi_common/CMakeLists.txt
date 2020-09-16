@@ -50,3 +50,8 @@ add_executable(laser_scan_frame_transform src/laser_scan_frame_transform.cpp)
 
 target_link_libraries(control_robot ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(laser_scan_frame_transform ${catkin_LIBRARIES})
+
+catkin_install_python(PROGRAMS scripts/computer_state_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS scripts/handle_state_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

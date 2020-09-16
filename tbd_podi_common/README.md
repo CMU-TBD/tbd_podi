@@ -15,6 +15,9 @@ As Podi's aluminimum structure gets in the way of the LIDAR, the laser gives out
 ## handle_state_node
 This node reads the encoder for the handler and publishes the current reading (0-1024) on the topic `handle_reading` (type: std_msgs/Int16). It also publishes the `sensor_msgs/JointState` messages for the `handle_rotation` and `handle_height` joints. 
 
+## computer_state_node
+This node reads the state of the laptop on board and publishes the state of the battery.
+
 # joystick control mapping
 TODO
 
