@@ -5,6 +5,9 @@
 
     <xacro:property name="robotname" value="podi" />
     
+    <!-- "fixed" if you don't want the handle to move. "move" for full rotation -->
+    <xacro:property name="handle_control" value="fixed" />
+
     <!-- Inport helper functions -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/inertia_tensors.xacro"/>
     <xacro:include filename="$(find tbd_podi_description)/urdf/azure_kinect.urdf.xacro"/>

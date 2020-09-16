@@ -117,7 +117,12 @@
         <axis xyz = "0 0 1" />
         <parent link="handle_base"/>
         <child link="handle_bottom_plate"/>
-        <limit lower="-1.57" upper="1.57" effort="1" velocity="1" />
+        <xacro:if value="${handle_control == 'fixed'}">
+            <limit lower="-0.01" upper="0.01" effort="1" velocity="1" />
+        </xacro:if>
+        <xacro:if value="${handle_control == 'move'}">
+            <limit lower="-1.57" upper="1.57" effort="1" velocity="1" />
+        </xacro:if>
     </joint>
 
     <joint name="handle_bottom_plate_to_back_plate" type="fixed">

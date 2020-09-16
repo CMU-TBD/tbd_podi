@@ -78,7 +78,7 @@
     </visual>
   </gazebo>
 
-  <gazebo reference="zed_left_camera_optical_frame">
+  <gazebo reference="zed_left_camera_frame">
     <sensor type="depth" name="front_depth_camera">
       <update_rate>30.0</update_rate>
       <camera name="front_camera">
@@ -98,7 +98,7 @@
     </sensor>
   </gazebo>
 
-  <!-- <gazebo reference="zed_left_camera_optical_frame">
+  <!-- <gazebo reference="zed_left_camera_frame">
     <gravity>true</gravity>
     <sensor type="imu_sensor" name="azure_imu">
       <always_on>true</always_on>
