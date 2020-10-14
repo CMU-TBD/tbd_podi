@@ -16,6 +16,9 @@
 	<!-- Launch ROSARIA, which communicates with the P3DX Base -->
 	<node pkg = "rosaria" type = "RosAria" name = "RosAria" output="screen" unless="$(arg sim)">
 		<param name="port" value="$(arg rosaria_port)" type="string"/>
+		<param name="base_link_frame" value="$(arg robot_name)/base_link" type="string"/>
+		<param name="odom_frame" value="$(arg robot_name)/odom" type="string"/>
+		<param name="laser_frame" value="$(arg robot_name)/laser_scanner" type="string"/>
 		<param name="publish_aria_lasers" value="$(arg rosaria_publish_lasers)" type="bool"/>
 	</node>
 

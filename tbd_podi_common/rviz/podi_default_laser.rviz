@@ -6,6 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /RobotModel1
+        - /LaserScan1
+        - /LaserScan1/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -26,7 +29,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -87,6 +90,20 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        display:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        face_screen:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         front_sonar:
           Alpha: 1
           Show Axes: false
@@ -117,7 +134,16 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_hub:
+        head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        laser_scanner:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_hubcap:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -127,7 +153,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        right_hub:
+        right_hubcap:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -142,9 +168,46 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        zed_baro_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_camera_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        zed_left_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_left_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_mag_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_right_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_right_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_temp_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed_temp_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Name: RobotModel
-      Robot Description: robot_description
-      TF Prefix: ""
+      Robot Description: /podi/robot_description
+      TF Prefix: podi
       Update Interval: 0
       Value: true
       Visual Enabled: true
@@ -173,7 +236,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Flat Squares
-      Topic: /laser
+      Topic: podi/laser
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -182,7 +245,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: podi/odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -212,6 +275,7 @@ Visualization Manager:
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
       Focal Point:
         X: 0
         Y: 0
@@ -223,7 +287,6 @@ Visualization Manager:
       Near Clip Distance: 0.009999999776482582
       Pitch: 0.8303979635238647
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
       Yaw: 2.9504058361053467
     Saved: ~
 Window Geometry:
@@ -242,5 +305,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 67
+  X: 72
   Y: 27
