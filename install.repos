@@ -18,7 +18,7 @@ repositories:
   tbd_podi:
     type: git
     url: git@github.com:CMU-TBD/tbd_podi.git
-    version: zhi/noetic-devel
+    version: master
   tbd_podi_screen_android:
     type: git
     url: git@github.com:CMU-TBD/TBD_podi_face.git

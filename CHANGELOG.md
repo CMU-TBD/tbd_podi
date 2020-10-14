@@ -9,6 +9,10 @@
 <!-- ## TODOs
 ## [Unreleased] -->
 
+## [1.3.1] - 2020-09-20
+- **[Fixed]** Issue where robot will stop turning after 1 second of the same command.
+- **[Added]** Infrastructure to add different joystick types and customize buttons.
+
 ## [1.3.0] - 2020-09-15
 - **[Changed]** Change Camera from AzureKinect to Zed2
 - **[Changed]** Change namespace to be more consistent

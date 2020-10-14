@@ -12,6 +12,10 @@ ControlRobot::ControlRobot() : private_nh("~")
     private_nh.param("control_loop_rate", controlLoopHz, 100.0);
     private_nh.param("proportional_gain_factor", proportionalGainFactor, 0.90);
     private_nh.param("vel_latch_duration", velLatchDurationDouble, 0.25);
+    if (!private_nh.getParam("joystick_type", joystickType_))
+    {
+        joystickType_ = "logitech-dual-action";
+    }
     if (!private_nh.getParam("rosbag_recording_base_path", rosbagRecordingDir))
     {
         ROS_ERROR("ROSParam rosbagRecordingDir not defined. Unexpected behavior may ensue when trying to record a rosbag.");
@@ -367,8 +371,16 @@ void ControlRobot::publishVelocity(geometry_msgs::Twist &spd)
 void ControlRobot::joyCB(const sensor_msgs::Joy &msg)
 {
 
+    // default values 
     double lin_axes = msg.axes[1]; // left thumb joystick
     double ang_axes = msg.axes[3]; // right thumb joystick
+
+    if (joystickType_ == "logitech-dual-action")
+    {
+        //remap
+        ang_axes = msg.axes[2];
+    }
+    
     if (msg.buttons[4] || msg.buttons[5])
     { // if any of the estop buttons are pressed -- top LB & RB buttons
         {

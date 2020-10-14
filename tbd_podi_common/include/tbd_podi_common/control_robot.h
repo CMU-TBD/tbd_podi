@@ -52,6 +52,8 @@ namespace tbd_podi_common {
   	bool isRecordingRosbagOpen;
   	std::mutex isRecordingRosbagOpenMutex;
 
+	std::string joystickType_;
+
   	// Used for the functionality of the controlLoop
   	double controlLoopHz;
 
