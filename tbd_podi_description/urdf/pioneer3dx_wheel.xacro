@@ -3,9 +3,9 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Right/Left Hubcap + Wheel -->
-  <xacro:macro name="p3dx_wheel" params="suffix reflect parent">
+  <xacro:macro name="p3dx_wheel" params="tf_suffix suffix reflect parent">
 
-    <link name="${suffix}_wheel">
+    <link name="${tf_suffix}_wheel">
       <xacro:hollow_cylinder_inertial radius="0.09" inner_radius="0.05" length="0.04" mass="1" />
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -26,15 +26,15 @@
       </collision>
     </link>
 
-    <joint name="${suffix}_hubcap_joint" type="fixed">
+    <joint name="${tf_suffix}_hubcap_joint" type="fixed">
       <!--<origin xyz="0 ${reflect*0.158} 0.091" rpy="0 0 0"/>-->
       <origin xyz="0 0 0" rpy="0 0 0"/>
 
-      <parent link="${suffix}_wheel"/>
-      <child link="${suffix}_hubcap"/>
+      <parent link="${tf_suffix}_wheel"/>
+      <child link="${tf_suffix}_hubcap"/>
     </joint>
 
-    <link name="${suffix}_hubcap">
+    <link name="${tf_suffix}_hubcap">
       <!-- It's a big hard to model the exact inertia, so let's ignore it here. -->
       <inertial>
         <mass value="0.00"/>
@@ -60,33 +60,33 @@
     </link>
 
     <!-- Parent to the wheel -->
-    <joint name="${suffix}_wheel_joint" type="continuous">
+    <joint name="${tf_suffix}_wheel_joint" type="continuous">
       <axis xyz="0 1 0"/>
       <origin xyz="0 ${reflect*0.158} 0.091" rpy="0 0 0"/>
       <parent link="${parent}"/>
-      <child link="${suffix}_wheel"/>
+      <child link="${tf_suffix}_wheel"/>
     </joint>
 
     <!-- Transmission variable for gazebo -->
     <!-- This is commented out because it is used by gazebo_ros_controller, it will superseed
     the internal wheel controller if set
-    <transmission type="pr2_mechanism_model/SimpleTransmission" name="${suffix}_wheel_trans">
+    <transmission type="pr2_mechanism_model/SimpleTransmission" name="${tf_suffix}_wheel_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <actuator name="${suffix}_wheel_motor">
+      <actuator name="${tf_suffix}_wheel_motor">
         <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
         <mechanicalReduction>${reflect * 624/35 * 80/19}</mechanicalReduction>
       </actuator>
-      <joint name="${suffix}_wheel_joint">
+      <joint name="${tf_suffix}_wheel_joint">
         <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
       </joint>
     </transmission> -->
 
-    <gazebo reference="${suffix}_hubcap">
+    <gazebo reference="${tf_suffix}_hubcap">
       <material value="Gazebo/Yellow"/>
     </gazebo>
 
 
-    <gazebo reference="${suffix}_wheel">
+    <gazebo reference="${tf_suffix}_wheel">
       <material value="Gazebo/Black"/>
       <elem key="mu1" value="0.5" />
       <elem key="mu2" value="50.0" />

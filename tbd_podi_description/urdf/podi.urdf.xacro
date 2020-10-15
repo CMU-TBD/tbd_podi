@@ -3,10 +3,13 @@
 <robot name="podi" 
     xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <xacro:property name="robotname" value="podi" />
+    <!-- XACRO Properties and Arguments -->
+    <xacro:arg name="robot_name" default="podi" />
+    <xacro:arg name="handle_control" default="fixed" /> <!-- "fixed" if you don't want the handle to move. "move" for full rotation -->
     
-    <!-- "fixed" if you don't want the handle to move. "move" for full rotation -->
-    <xacro:property name="handle_control" value="fixed" />
+    <xacro:property name="robotname" value="podi" />
+    <xacro:property name="handle_control" value="$(arg handle_control)" />
+    
 
     <!-- Inport helper functions -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/inertia_tensors.xacro"/>
@@ -15,13 +18,10 @@
 
     <!-- Import the base robot -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/pioneer3dx.urdf.xacro"/>
-
     <!-- Import the handle -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/podi_handle.xacro"/>
-
-    <!-- Import the structure -->
+    <!-- Import the top structure -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/podi_structure.xacro"/>
-
     <!-- Gazebo -->
     <xacro:include filename="$(find tbd_podi_description)/urdf/podi.gazebo.xacro"/>
 </robot>

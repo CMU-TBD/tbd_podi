@@ -1,6 +1,6 @@
 local_costmap:
-  global_frame: podi/odom
-  robot_base_frame: podi/base_link
+  global_frame: podi_odom
+  robot_base_frame: podi_base_link
   update_frequency: 5.0 #The frequency in Hz for the map to be updated.
   publish_frequency: 2.5 #The frequency in Hz for the map to be publish display information.
   width: 5.0 #The width of the map in meters.

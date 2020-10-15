@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>tbd_podi_gazebo</name>
-  <version>1.2.0</version>
+  <version>1.4.0</version>
   <description>The tbd_podi_gazebo package</description>
   <maintainer email="zhi.tan@ri.cmu.edu">xiangzht</maintainer>
   <license>MIT</license>
   <buildtool_depend>catkin</buildtool_depend>  
   <depend>gazebo_ros</depend>
+  <depend>navigation</depend>
+  <depend>gazebo_ros_pkgs</depend>
   
 </package>

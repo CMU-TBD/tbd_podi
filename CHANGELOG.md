@@ -8,6 +8,9 @@
 ## [0.2.0] - 2020-04-17 -->
 <!-- ## TODOs
 ## [Unreleased] -->
+## [1.4.0] 
+- **[BREAKING]** Changed namespace to work with ZED by prefixing by `podi_` instead through `podi/` 
+- **[Fixed]** Issues arised from the namespace problems.
 
 ## [1.3.1] - 2020-09-20
 - **[Fixed]** Issue where robot will stop turning after 1 second of the same command.

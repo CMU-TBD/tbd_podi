@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>tbd_podi_2dnav</name>
-  <version>0.0.0</version>
+  <version>1.4.0</version>
   <description>The tbd_podi_2dnav package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="xiangzht@todo.todo">xiangzht</maintainer>
+  <maintainer email="zhi.tan@ri.cmu.edu">xiangzht</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -50,7 +50,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>move_base</depend>
+  <depend>navigation</depend>
   <build_depend>tbd_podi_common</build_depend>
   <exec_depend>tbd_podi_common</exec_depend>
 

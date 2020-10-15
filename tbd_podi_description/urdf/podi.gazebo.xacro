@@ -5,36 +5,35 @@
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>100</updateRate>
-      <leftJoint>left_wheel_joint</leftJoint>
-      <rightJoint>right_wheel_joint</rightJoint>
+      <leftJoint>$(arg robot_name)_left_wheel_joint</leftJoint>
+      <rightJoint>$(arg robot_name)_right_wheel_joint</rightJoint>
       <wheelSeparation>0.316</wheelSeparation>
       <wheelDiameter>0.18</wheelDiameter>
       <wheelTorque>15</wheelTorque>
       <publishWheelJointState>true</publishWheelJointState>
       <publishWheelTF>false</publishWheelTF>
       <wheelAcceleration>1</wheelAcceleration>
-      <commandTopic>cmd_vel</commandTopic>
-      <odometryTopic>odom</odometryTopic>
-      <odometryFrame>odom</odometryFrame>
-      <robotBaseFrame>base_link</robotBaseFrame>
-      <robotNamespace>${robotname}</robotNamespace>
+      <commandTopic>$(arg robot_name)/cmd_vel</commandTopic>
+      <odometryTopic>$(arg robot_name)/odom</odometryTopic>
+      <odometryFrame>$(arg robot_name)_odom</odometryFrame>
+      <robotBaseFrame>$(arg robot_name)_base_link</robotBaseFrame>
       <odometrySource>encoder</odometrySource>      <!-- The options are world and encoder. World means getting it straight from Gazebo -->
     </plugin>
 
     <!-- ground truth -->
-    <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+    <!-- <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>100.0</updateRate>
-      <bodyName>base_link</bodyName>
+      <bodyName>"$(arg robot_name)_base_link"</bodyName>
       <topicName>${robotname}/pose_ground_truth</topicName>
       <gaussianNoise>0.01</gaussianNoise>
       <frameName>map</frameName>
       <xyzOffsets>0 0 0</xyzOffsets>
       <rpyOffsets>0 0 0</rpyOffsets>
-    </plugin>
+    </plugin> -->
   </gazebo>
 
-  <gazebo reference="laser_scanner">
+  <gazebo reference="$(arg robot_name)_laser_scanner">
     <sensor type="ray" name="lms100x">
       <pose>0 0 0 0 0 0</pose>
       <!-- <visualize>true</visualize> -->
@@ -59,26 +58,25 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="${robotname}_front_lidar_controller" filename="libgazebo_ros_laser.so">
-        <topicName>laser</topicName>
-        <frameName>${robotname}/laser_scanner</frameName>
-        <robotNamespace>${robotname}</robotNamespace>
+      <plugin name="$(arg robot_name)_front_lidar_controller" filename="libgazebo_ros_laser.so">
+        <topicName>$(arg robot_name)/laser</topicName>
+        <frameName>$(arg robot_name)_laser_scanner</frameName>
       </plugin>
     </sensor>
   </gazebo>
 
-  <gazebo reference="display">
+  <gazebo reference="$(arg robot_name)_display">
     <visual>
       <plugin name="screen_video_controller" filename="libgazebo_ros_video.so">
         <height>1280</height>
         <width>720</width>
         <topicName>screen_face</topicName>
-        <robotNamespace>${robotname}</robotNamespace>
+        <robotNamespace>$(arg robot_name)</robotNamespace>
       </plugin>
     </visual>
   </gazebo>
 
-  <gazebo reference="zed_left_camera_frame">
+  <gazebo reference="$(arg robot_name)_front_camera_left_camera_frame">
     <sensor type="depth" name="front_depth_camera">
       <update_rate>30.0</update_rate>
       <camera name="front_camera">
@@ -91,7 +89,7 @@
       </camera>
       <plugin name="head_depth_camera" filename="libgazebo_ros_depth_camera.so">
         <cameraName>front_camera</cameraName>
-        <frameName>${robotname}/zed_left_camera_optical_frame</frameName>
+        <frameName>$(arg robot_name)_front_camera_left_camera_optical_frame</frameName>
         <robotNamespace>${robotname}</robotNamespace>
         <pointCloudCutoff>2.0</pointCloudCutoff>
       </plugin>

@@ -15,6 +15,7 @@
 	<arg name="trans_laser_topic_name"			default="$(arg robot_name)/laser" />
 
 	<include file="$(find tbd_podi_common)/launch/control_robot_base.launch">
+		<arg name="robot_name" 					value="$(arg robot_name)"/>
 		<arg name="rosaria_port" 				value="$(arg rosaria_port)"/>
 		<arg name="rosaria_publish_lasers" 		value="$(arg rosaria_publish_lasers)"/>
 		<arg name="joystick_device_path" 		value="$(arg joystick_device_path)"/>

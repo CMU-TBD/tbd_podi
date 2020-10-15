@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>tbd_podi_common</name>
-  <version>0.0.0</version>
+  <version>1.4.0</version>
   <description>Contains code common to any application or research that uses the Podi robot</description>
   <maintainer email="zhi.tan@ri.cmu.edu">Zhi Tan</maintainer>
   <license>MIT</license>

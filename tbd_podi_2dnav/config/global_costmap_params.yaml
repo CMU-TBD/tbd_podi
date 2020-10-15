@@ -1,6 +1,6 @@
 global_costmap:
   global_frame: map
-  robot_base_frame: podi/base_link
+  robot_base_frame: podi_base_link
   update_frequency: 5.0
   static_map: true
   map_type: voxel # What map type to use. "voxel" or "costmap" are the supported types, with the difference between them being a 3D-view of the world vs. a 2D-view of the world.

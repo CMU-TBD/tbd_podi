@@ -6,7 +6,7 @@
     <xacro:include filename="$(find tbd_podi_description)/urdf/pioneer3dx_wheel.xacro"/>
 
     <!-- Chassis -->
-    <link name="base_link">
+    <link name="$(arg robot_name)_base_link">
         <xacro:box_inertial x="0.35" y="0.25" z="0.14" mass="10" />
         <visual>
             <origin xyz="-0.045 0 0.148" rpy="0 0 0"/>
@@ -24,11 +24,11 @@
             </geometry>
         </collision>
     </link>
-    <gazebo reference="base_link">
+    <gazebo reference="$(arg robot_name)_base_link">
         <material>Gazebo/Red</material>
     </gazebo>
 
-    <link name="top_plate">
+    <link name="$(arg robot_name)_top_plate">
         <xacro:box_inertial x="0.45" y="0.38" z="0.01" mass="0.5" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -46,18 +46,18 @@
             </geometry>
         </collision>
     </link>
-    <gazebo reference="top_plate">
+    <gazebo reference="$(arg robot_name)_top_plate">
         <material>Gazebo/Black</material>
     </gazebo>
 
-    <joint name="base_top_joint" type="fixed">
+    <joint name="$(arg robot_name)_base_top_joint" type="fixed">
         <origin xyz="-0.045 0 0.234" rpy="0 0 0"/>
         <axis xzy="0 0 1"/>
-        <parent link="base_link"/>
-        <child link="top_plate"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_top_plate"/>
     </joint>
 
-    <link name="front_sonar">
+    <link name="$(arg robot_name)_front_sonar">
         <inertial>
             <mass value="0.0001"/>
             <origin xyz="0 0 0"/>
@@ -73,23 +73,23 @@
             </material>
         </visual>
     </link>
-    <gazebo reference="front_sonar">
+    <gazebo reference="$(arg robot_name)_front_sonar">
         <material value="Gazebo/Yellow"/>
     </gazebo>
 
-    <joint name="base_front_joint" type="fixed">
+    <joint name="$(arg robot_name)_base_front_joint" type="fixed">
         <origin xyz="-0.198 0 0.208" rpy="0 0 0"/>
-        <parent link="base_link"/>
-        <child link="front_sonar"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_front_sonar"/>
     </joint>
 
-    <joint name="base_back_joint" type="fixed">
+    <joint name="$(arg robot_name)_base_back_joint" type="fixed">
         <origin xyz="0.109 0 0.209" rpy="0 0 0"/>
-        <parent link="base_link"/>
-        <child link="back_sonar"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_back_sonar"/>
     </joint>
 
-    <link name="back_sonar">
+    <link name="$(arg robot_name)_back_sonar">
         <inertial>
             <mass value="0"/>
             <origin xyz="0 0 0"/>
@@ -113,15 +113,15 @@
     </link>
 
     <!-- Caster -->
-    <joint name="base_caster_swivel_joint" type="continuous">
+    <joint name="$(arg robot_name)_base_caster_swivel_joint" type="continuous">
         <origin xyz="-0.185 0 0.055" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
         <limit effort="100" velocity="100" k_velocity="0" />
         <joint_properties damping="0.0" friction="0.0" />
-        <parent link="base_link"/>
-        <child link="caster_swivel"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_caster_swivel"/>
     </joint>
-    <link name="caster_swivel">
+    <link name="$(arg robot_name)_caster_swivel">
         <inertial>
             <mass value="0.01"/>
             <origin xyz="0 0 0"/>
@@ -132,26 +132,26 @@
             <geometry name="pioneer_geom">
                 <mesh filename="package://tbd_podi_description/meshes/p3dx_meshes/caster_swivel.stl"/>
             </geometry>
-            <material name="caster_swivel">
+            <material name="$(arg robot_name)_caster_swivel">
                 <color rgba="0.5 0.5 0.5 1"/>
             </material>
         </visual>
     </link>
-    <gazebo reference="caster_swivel">
+    <gazebo reference="$(arg robot_name)_caster_swivel">
         <material value="Gazebo/Grey"/>
     </gazebo>
 
-    <joint name="caster_swivel_hubcap_joint" type="continuous">
+    <joint name="$(arg robot_name)_caster_swivel_hubcap_joint" type="continuous">
         <origin xyz="-0.026 0 -0.016" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
         <anchor xyz="0 0 0"/>
         <limit effort="100" velocity="100" k_velocity="0" />
         <joint_properties damping="0.0" friction="0.0" />
-        <parent link="caster_swivel"/>
-        <child link="caster_wheel"/>
+        <parent link="$(arg robot_name)_caster_swivel"/>
+        <child link="$(arg robot_name)_caster_wheel"/>
     </joint>
 
-    <link name="caster_wheel">
+    <link name="$(arg robot_name)_caster_wheel">
         <xacro:cylinder_inertial radius="0.0375" length="0.01" mass="0.5" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -169,18 +169,18 @@
             </geometry>
         </collision>
     </link>
-    <gazebo reference="caster_wheel">
+    <gazebo reference="$(arg robot_name)_caster_wheel">
         <material>Gazebo/Black</material>
     </gazebo>
 
 
-    <joint name="caster_wheel_joint" type="fixed">
+    <joint name="$(arg robot_name)_caster_wheel_joint" type="fixed">
         <origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
-        <parent link="caster_wheel"/>
-        <child link="caster_hubcap"/>
+        <parent link="$(arg robot_name)_caster_wheel"/>
+        <child link="$(arg robot_name)_caster_hubcap"/>
     </joint>
 
-    <link name="caster_hubcap">
+    <link name="$(arg robot_name)_caster_hubcap">
         <inertial>
             <mass value="0.01"/>
             <origin xyz="0 0 0"/>
@@ -191,7 +191,7 @@
             <geometry name="pioneer_geom">
                 <mesh filename="package://tbd_podi_description/meshes/p3dx_meshes/caster_hubcap.stl"/>
             </geometry>
-            <material name="caster_swivel">
+            <material name="$(arg robot_name)_caster_swivel">
                 <color rgba="0.5 0.5 0.5 1"/>
             </material>
         </visual>
@@ -202,17 +202,12 @@
             </geometry>
         </collision>
     </link>
-    <gazebo reference="caster_hubcap">
+    <gazebo reference="$(arg robot_name)_caster_hubcap">
         <material value="Gazebo/Grey"/>
     </gazebo>
 
-    <xacro:p3dx_wheel suffix="left" parent="base_link" reflect="1"/>
-    <xacro:p3dx_wheel suffix="right" parent="base_link" reflect="-1"/>
-
-    <create>
-        <back_sonar parent="base_link"/>
-        <top_plate parent="base_link"/>
-    </create>
+    <xacro:p3dx_wheel tf_suffix="$(arg robot_name)_left" suffix="left" parent="$(arg robot_name)_base_link" reflect="1"/>
+    <xacro:p3dx_wheel tf_suffix="$(arg robot_name)_right"  suffix="right" parent="$(arg robot_name)_base_link" reflect="-1"/>
 
 </robot>
 

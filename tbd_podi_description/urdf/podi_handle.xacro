@@ -2,7 +2,7 @@
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <link name="handle_base">
+    <link name="$(arg robot_name)_handle_base">
         <xacro:cylinder_inertial radius="0.06" length="0.04" mass="10" />
         <visual>
             <origin xyz="0 0 0.02" rpy="0 0 0"/>
@@ -20,7 +20,7 @@
             </geometry>
         </collision>
     </link>
-    <link name="handle_bottom_plate">
+    <link name="$(arg robot_name)_handle_bottom_plate">
         <xacro:box_inertial x="0.09" y="0.21" z="0.005" mass="1" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -38,7 +38,7 @@
             </geometry>
         </collision>
     </link>
-    <link name="handle_back_plate">
+    <link name="$(arg robot_name)_handle_back_plate">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -61,7 +61,7 @@
         </collision>
     </link>
 
-    <link name="handle_bottom">
+    <link name="$(arg robot_name)_handle_bottom">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -83,7 +83,7 @@
             </geometry>
         </collision>
     </link>
-    <link name="handle_top">
+    <link name="$(arg robot_name)_handle_top">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -106,17 +106,17 @@
         </collision>
     </link>
 
-    <joint name="handle_base_joint" type="fixed">
+    <joint name="$(arg robot_name)_handle_base_joint" type="fixed">
         <origin xyz="-0.13 0 0.234" rpy="0 0 0"/>
-        <parent link="base_link"/>
-        <child link="handle_base"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_handle_base"/>
     </joint>
 
-    <joint name="handle_rotation" type="revolute">
+    <joint name="$(arg robot_name)_handle_rotation" type="revolute">
         <origin xyz="0 0 0.04" rpy="0 0 0"/>
         <axis xyz = "0 0 1" />
-        <parent link="handle_base"/>
-        <child link="handle_bottom_plate"/>
+        <parent link="$(arg robot_name)_handle_base"/>
+        <child link="$(arg robot_name)_handle_bottom_plate"/>
         <xacro:if value="${handle_control == 'fixed'}">
             <limit lower="-0.01" upper="0.01" effort="1" velocity="1" />
         </xacro:if>
@@ -125,23 +125,23 @@
         </xacro:if>
     </joint>
 
-    <joint name="handle_bottom_plate_to_back_plate" type="fixed">
+    <joint name="$(arg robot_name)_handle_bottom_plate_to_back_plate" type="fixed">
         <origin xyz="0.045 0 0.005" rpy="0 0.785398 0"/>
-        <parent link="handle_bottom_plate"/>
-        <child link="handle_back_plate"/>
+        <parent link="$(arg robot_name)_handle_bottom_plate"/>
+        <child link="$(arg robot_name)_handle_back_plate"/>
     </joint>
 
-    <joint name="handle_back_plate_to_bottom" type="fixed">
+    <joint name="$(arg robot_name)_handle_back_plate_to_bottom" type="fixed">
         <origin xyz="-0.14 0 0.005" rpy="0 0 0"/>
-        <parent link="handle_back_plate"/>
-        <child link="handle_bottom"/>
+        <parent link="$(arg robot_name)_handle_back_plate"/>
+        <child link="$(arg robot_name)_handle_bottom"/>
     </joint>
 
-    <joint name="handle_length" type="prismatic">
+    <joint name="$(arg robot_name)_handle_length" type="prismatic">
         <origin xyz="-0.33 0 0.0275" rpy="0 0 0"/>
         <axis xyz ="-1 0 0" />
-        <parent link="handle_bottom"/>
-        <child link="handle_top"/>
+        <parent link="$(arg robot_name)_handle_bottom"/>
+        <child link="$(arg robot_name)_handle_top"/>
         <limit lower="0" upper="0.46" effort="0" velocity="1" />
     </joint>
 

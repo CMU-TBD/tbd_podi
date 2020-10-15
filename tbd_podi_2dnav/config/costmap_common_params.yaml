@@ -18,6 +18,6 @@ min_obstacle_height: 0.0 # m
 #	marking      : Whether or not this observation should be used to mark obstacles.
 
 observation_sources: laser_scan_sensor
-laser_scan_sensor: {sensor_frame: podi/laser_scanner, data_type: LaserScan, topic: podi/laser, marking: true, clearing: true}
+laser_scan_sensor: {sensor_frame: podi_laser_scanner, data_type: LaserScan, topic: podi/laser, marking: true, clearing: true}
 
 #More information at http://wiki.ros.org/costmap_2d and http://wiki.ros.org/costmap_2d/flat

@@ -44,7 +44,10 @@
 	</group>
 
 	<!-- Start the P3DX's URDF broadcaster, so the appropriate TF tree is published -->
-	<param name="$(arg robot_name)/robot_description" command="$(find xacro)/xacro $(arg xacro)" />
+	<param name="$(arg robot_name)/robot_description" 
+		command="$(find xacro)/xacro $(arg xacro)
+				 robot_name:=$(arg robot_name)" 
+	/>
 
 	<node name="$(arg robot_name)_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
 		<rosparam param="source_list" subst_value="True">$(arg joint_publish_list)</rosparam>
@@ -53,7 +56,6 @@
 
 	<node name="$(arg robot_name)_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
 		<remap from="robot_description" to="$(arg robot_name)/robot_description" />
-		<param name="tf_prefix" value="$(arg robot_name)" />
 	</node>
 
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_path)" required="true" if="$(arg launch_rviz)"/>

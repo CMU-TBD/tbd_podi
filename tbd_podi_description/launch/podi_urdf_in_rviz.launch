@@ -1,9 +1,15 @@
 <launch>
     
-    <arg name="xacro" 				default="$(find tbd_podi_description)/urdf/podi.urdf.xacro"/>
-  	<arg name="gui" 					default="True" />
+    <arg name="xacro" 				  default="$(find tbd_podi_description)/urdf/podi.urdf.xacro"/>
+  	<arg name="gui" 					  default="True" />
+  	<arg name="handle_control"  default="move" />
+  	<arg name="robot_name" 			default="podi" />
 
-  	<param name="robot_description" command="$(find xacro)/xacro $(arg xacro)" />
+  	<param name="robot_description" 
+      command="$(find xacro)/xacro $(arg xacro)
+               robot_name:=$(arg robot_name)
+               handle_control:=$(arg handle_control)" 
+    />
 
   	<node name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" if="$(arg gui)"/>    
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />

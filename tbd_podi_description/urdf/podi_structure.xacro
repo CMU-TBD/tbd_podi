@@ -2,7 +2,7 @@
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <link name="laser_scanner">
+    <link name="$(arg robot_name)_laser_scanner">
         <xacro:box_inertial x="0.105" y="0.102" z="0.152" mass="0.429" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -21,16 +21,16 @@
         </collision>
     </link>
 
-    <joint name="laser_scanner_to_base_joint" type="fixed">
+    <joint name="$(arg robot_name)_laser_scanner_to_base_joint" type="fixed">
         <origin xyz="0.015 0 0.15" rpy="${pi} 0 0"/>
-        <parent link="back_sonar"/>
-        <child link="laser_scanner"/>
+        <parent link="$(arg robot_name)_back_sonar"/>
+        <child link="$(arg robot_name)_laser_scanner"/>
     </joint>
 
     <xacro:property name="face_screen_width" value="0.006" />
     <xacro:property name="face_screen_height" value="0.2373" />
     <xacro:property name="face_screen_length" value="0.169" />
-    <link name="face_screen">
+    <link name="$(arg robot_name)_face_screen">
         <xacro:box_inertial x="${face_screen_width}" y="${face_screen_length}" z="${face_screen_height}" mass="0.429" />
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -49,7 +49,7 @@
         </collision>
     </link>
 
-    <link name="head">
+    <link name="$(arg robot_name)_head">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -57,22 +57,22 @@
         </inertial>
     </link>
     
-    <joint name="head_to_screen_joint" type="fixed">
+    <joint name="$(arg robot_name)_head_to_screen_joint" type="fixed">
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <parent link="head"/>
-        <child link="face_screen"/>
+        <parent link="$(arg robot_name)_head"/>
+        <child link="$(arg robot_name)_face_screen"/>
     </joint>
 
-    <joint name="screen_to_laser_scanner_joint" type="fixed">
+    <joint name="screen_to_$(arg robot_name)_laser_scanner_joint" type="fixed">
         <origin xyz="0.0 0 ${0.15 + face_screen_height + 0.05}" rpy="0 0 0"/>
-        <parent link="back_sonar"/>
-        <child link="head"/>
+        <parent link="$(arg robot_name)_back_sonar"/>
+        <child link="$(arg robot_name)_head"/>
     </joint>
 
     <xacro:property name="display_width" value="0.01" />
     <xacro:property name="display_height" value="0.10125" />
     <xacro:property name="display_length" value="0.18" />
-    <link name="display">
+    <link name="$(arg robot_name)_display">
         <inertial>
             <mass value="0.01" />
             <origin xyz="0 0 0" />
@@ -95,28 +95,29 @@
         </collision>
     </link>
 
-    <joint name="display_to_screen_joint" type="fixed">
+    <joint name="$(arg robot_name)_display_to_screen_joint" type="fixed">
         <origin xyz="0.01 0 0" rpy="${3.1415927/2.0} 0 ${3.1415927/2.0}"/>
-        <parent link="face_screen"/>
-        <child link="display"/>
+        <parent link="$(arg robot_name)_face_screen"/>
+        <child link="$(arg robot_name)_display"/>
     </joint>
 
-   <joint name="camera_mount_to_screen_joint" type="fixed">
+   <joint name="$(arg robot_name)_camera_mount_to_screen_joint" type="fixed">
         <origin xyz="0.025 0 ${face_screen_height/2 + 0.025}" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <parent link="face_screen"/>
-        <child link="front_camera_mount"/>
+        <parent link="$(arg robot_name)_face_screen"/>
+        <child link="$(arg robot_name)_front_camera_mount"/>
     </joint>
 
-    <xacro:arg name="base_frame" default="front_camera_mount"/>
+    <xacro:arg name="base_frame" default="$(arg robot_name)_front_camera_mount"/>
     <xacro:arg name="camera_model" default="zed2"/>
+    <xacro:arg name="camera_name" default="$(arg robot_name)_front_camera"/>
     <xacro:include filename="$(find tbd_podi_description)/urdf/zed_descr.urdf.xacro">
     </xacro:include>
     <!-- camera_name="zed2" camera_model="zed2" base_frame="${robotname_camera_mount}"/> -->
 
     <!-- Include Azure Kinect -->
-    <!-- <xacro:insert_azure_kinect parent="front_camera_mount" tf_prefix=""/> -->
-    <!-- <link name="front_camera_mount">
+    <!-- <xacro:insert_azure_kinect parent="$(arg robot_name)_front_camera_mount" tf_prefix=""/> -->
+    <!-- <link name="$(arg robot_name)_front_camera_mount">
         <inertial>
             <mass value="0.0001" />
             <origin xyz="0 0 0" />
