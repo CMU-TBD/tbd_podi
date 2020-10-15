@@ -22,9 +22,6 @@
 		<arg name="joystick_device_path" 		value="$(arg joystick_device_path)"/>
 		<arg name="rosbag_recording_base_path" 	value="$(arg rosbag_recording_base_path)"/>
 		<arg name="playback_rosbag_path" 		value="$(arg playback_rosbag_path)"/>
-		<arg name="urdf"						value="$(arg urdf)"/>
-		<arg name="launchRviz"					value="$(arg launchRviz)"/>
-		<arg name="rvizConfigPath"				value="$(arg rvizConfigPath)"/>
 		<arg name="xacro"						value="$(arg xacro)"/>
 		<arg name="launch_rviz"					value="$(arg launch_rviz)"/>
 		<arg name="rviz_config_path"			value="$(arg rviz_config_path)"/>
@@ -36,6 +33,10 @@
 
 	</include>
 
-	<include file="$(find tbd_podi_common)/launch/dependencies/zed_camera.launch">
+	<include file="$(find zed_wrapper)/launch/zed2.launch">
+		<arg name="base_frame" value="podi/front_camera_mount" />
+		<arg name="publish_urdf" value="false" />
+		<arg name="camera_name" value="podi" />
+		<arg name="node_name" value="front_camera" />
 	</include>	
 </launch>
