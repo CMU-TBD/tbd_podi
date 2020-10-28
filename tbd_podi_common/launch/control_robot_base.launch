@@ -11,6 +11,7 @@
 	<arg name="joint_publish_list" default="[/podi/handle_state]"/>
 	<arg name="sim" default="false"/>
 	<arg name="use_joy" default="true" />
+	<arg name="enabling_switch" default="true" />
 	<arg name="motor_topic_name" default="RosAria/cmd_vel" />
 
 	<!-- Launch ROSARIA, which communicates with the P3DX Base -->
@@ -34,6 +35,7 @@
 		<param name="playback_rosbag_path" value="$(arg playback_rosbag_path)"/>
 		<param name="control_loop_rate" value="100.0"/>
 		<param name="proportional_gain_factor" value="0.90"/>
+		<param name="enabling_switch" value="$(arg enabling_switch)"/>
 		<remap from="output_cmd_vel" to="$(arg motor_topic_name)"/>
 	</node>
 

@@ -10,6 +10,7 @@
 	<arg name="rviz_config_path" 				default="$(find tbd_podi_common)/rviz/podi_default_laser.rviz" />
 	<arg name="sim" 							default="false"/>
 	<arg name="use_joy" 						default="true" />
+	<arg name="enabling_switch" 				default="true" />
 	<arg name="motor_topic_name" 				default="RosAria/cmd_vel" />
 	<arg name="incoming_laser_topic_name"		default="RosAria/lms1xx_1_laserscan" />
 	<arg name="trans_laser_topic_name"			default="$(arg robot_name)/laser" />
@@ -27,6 +28,7 @@
 		<arg name="sim" 						value="$(arg sim)"/>
 		<arg name="use_joy" 					value="$(arg use_joy)" />
 		<arg name="motor_topic_name" 			value="$(arg motor_topic_name)" />
+		<arg name="enabling_switch" 			value="$(arg enabling_switch)" />
 	</include>
 
 	<!-- Launch the nodes that crop its readings -->

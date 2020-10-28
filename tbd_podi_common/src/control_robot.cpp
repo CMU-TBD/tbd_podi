@@ -244,7 +244,7 @@ void ControlRobot::spin()
                 emergencyStopLock.unlock();
                 // check enabling switch
                 std::unique_lock<std::mutex> enablingswitchLock(enablingSwitchMutex_);
-                if (enablingSwitchState_){
+                if (!enablingSwitchEnabled_ || enablingSwitchState_){
                     enablingswitchLock.unlock();
                     if (wasVelPublished)
                     {
@@ -264,7 +264,11 @@ void ControlRobot::spin()
                             ControlRobot::publishVelocity(lastPublishedSpd);
                         }
                     }
+                    continue;
                 }
+                // publish empty velocity
+                geometry_msgs::Twist spd; // default is a zero twist
+                ControlRobot::publishVelocity(spd);
             }
         }
     }
