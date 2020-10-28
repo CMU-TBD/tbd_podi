@@ -8,6 +8,9 @@
 ## [0.2.0] - 2020-04-17 -->
 <!-- ## TODOs
 ## [Unreleased] -->
+## [Unreleased]
+- **[Added]** Added enabling switch to Podi. When true, the button must be hold down to move.
+
 ## [1.4.0] 
 - **[BREAKING]** Changed namespace to work with ZED by prefixing by `podi_` instead through `podi/` 
 - **[Fixed]** Issues arised from the namespace problems.

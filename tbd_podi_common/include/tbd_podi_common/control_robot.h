@@ -57,6 +57,11 @@ namespace tbd_podi_common {
   	// Used for the functionality of the controlLoop
   	double controlLoopHz;
 
+	// enabling switch
+	bool enablingSwitchEnabled_;
+	bool enablingSwitchState_;
+	std::mutex enablingSwitchMutex_;
+
   	// concurrency literals for the estop
   	bool emergencyStop;
   	bool newEmergencyStop;
