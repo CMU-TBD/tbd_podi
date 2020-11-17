@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /RobotModel1
         - /LaserScan1
-        - /LaserScan1/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -65,149 +64,149 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        back_sonar:
+        podi_back_sonar:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        base_link:
+        podi_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        caster_hubcap:
+        podi_caster_hubcap:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        caster_swivel:
+        podi_caster_swivel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        caster_wheel:
+        podi_caster_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        display:
+        podi_display:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        face_screen:
+        podi_face_screen:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_camera_mount:
+        podi_front_camera_baro_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        front_sonar:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        handle_back_plate:
+        podi_front_camera_camera_center:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        handle_base:
+        podi_front_camera_left_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_left_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_mag_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_right_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_right_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_temp_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_camera_temp_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_front_sonar:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        handle_bottom:
+        podi_handle_back_plate:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        handle_bottom_plate:
+        podi_handle_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        handle_top:
+        podi_handle_bottom:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        head:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        laser_scanner:
+        podi_handle_bottom_plate:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_hubcap:
+        podi_handle_top:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_wheel:
+        podi_head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        podi_laser_scanner:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_hubcap:
+        podi_left_hubcap:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_wheel:
+        podi_left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        top_plate:
+        podi_right_hubcap:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        zed_baro_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_camera_center:
+        podi_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        zed_left_camera_frame:
+        podi_top_plate:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        zed_left_camera_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_mag_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_right_camera_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_right_camera_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_temp_left_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        zed_temp_right_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: /podi/robot_description
-      TF Prefix: podi
+      TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
@@ -245,7 +244,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: podi/odom
+    Fixed Frame: podi_odom
     Frame Rate: 30
   Name: root
   Tools:
