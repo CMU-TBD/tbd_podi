@@ -8,8 +8,9 @@
 ## [0.2.0] - 2020-04-17 -->
 <!-- ## TODOs
 ## [Unreleased] -->
-## [Unreleased]
+## [1.5.0]
 - **[Added]** Added enabling switch to Podi. When true, the button must be hold down to move.
+- **[Added]** 3rd floor hallway map in NSH.
 
 ## [1.4.0] 
 - **[BREAKING]** Changed namespace to work with ZED by prefixing by `podi_` instead through `podi/` 
