@@ -25,9 +25,11 @@ namespace tbd_costmap
         ros::Time lastMsgTime_;
         std::vector<geometry_msgs::Point> latestPoints_;
         std::vector<geometry_msgs::Point> previousPoints_;
+        std::vector<geometry_msgs::Quaternion> latestOrients_;
+        std::vector<geometry_msgs::Quaternion> previousOrients_;
         dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
 
-        std::vector<geometry_msgs::Point> constructPolygons(geometry_msgs::Point center, double *min_x, double *min_y,
+        std::vector<geometry_msgs::Point> constructPolygons(geometry_msgs::Point center, geometry_msgs::Quaternion orient, double *min_x, double *min_y,
                                                             double *max_x, double *max_y);
         void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
 

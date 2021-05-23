@@ -40,7 +40,7 @@ namespace tbd_costmap
 
         // get the properities
         nh.param("topic", topicName_, std::string("/humans"));
-        nh.param("inflation", inflation_, 0.25);
+        nh.param("inflation", inflation_, 0.5);
         nh.param("ignore_time_stamp", ignoreTimeStamp_, false);
         nh.param("observation_keep_time", keepTimeSec_, 1.0);
         nh.param("enabled", enabled_, true);
@@ -71,22 +71,50 @@ namespace tbd_costmap
         }
     }
 
-    std::vector<geometry_msgs::Point> HumanLayer::constructPolygons(geometry_msgs::Point point, double *min_x, double *min_y,
+    std::vector<geometry_msgs::Point> HumanLayer::constructPolygons(geometry_msgs::Point point, geometry_msgs::Quaternion orient, double *min_x, double *min_y,
                                                                     double *max_x, double *max_y)
     {
+        // the polygon around the human to be returned
         std::vector<geometry_msgs::Point> polygon;
-        geometry_msgs::Point topPoint(point);
-        topPoint.y += inflation_;
-        polygon.push_back(topPoint);
-        geometry_msgs::Point leftPoint(point);
-        leftPoint.x += inflation_;
-        polygon.push_back(leftPoint);
-        geometry_msgs::Point bottomPoint(point);
-        bottomPoint.y -= inflation_;
-        polygon.push_back(bottomPoint);
-        geometry_msgs::Point rightPoint(point);
-        rightPoint.x -= inflation_;
-        polygon.push_back(rightPoint);
+        
+        // stores the value of pi
+        double pi = atan(1)*4;
+
+        // get RPY from quaternion
+        // convert geometry_msgs quat to tf2 quat to get angles
+        tf2::Quaternion quat_tf;
+        tf2::convert(orient, quat_tf);
+        
+        // convert the input quarernions into RPY
+        double roll, pitch, yaw;
+        tf2::Matrix3x3(quat_tf).getRPY(roll, pitch, yaw);
+
+        // set the reference angle
+        yaw -= pi;        
+
+        // loop and get 8 points for a ellipse type polygon
+        for (int i = 0; i < 8; i++)
+        {
+            geometry_msgs::Point curr_point(point);
+
+            double curr_angle = 2 * pi * (i /(double)8);
+
+            // major and minor diameters for the ellipse
+            double a = (inflation_/(double)2);
+            double b = inflation_;
+
+            // ellipse offset to that their is more space in front of the person
+            double offset = (b/(double)3);
+
+            // gets x and y for an ellipse, the last term is for the rotation at an offset point (found graphically using desmos)
+            // these are the parametric equations for the ellipse around the person
+            // you can plug these into desmos to see them in action
+            curr_point.x += a * cos(curr_angle) * cos(yaw) - b * sin(curr_angle) * sin(yaw) + offset * cos(yaw + (pi/(double)2));
+            curr_point.y += a * cos(curr_angle) * sin(yaw) + b * sin(curr_angle) * cos(yaw) + offset * sin(yaw + (pi/(double)2));
+
+            // add to the polygon
+            polygon.push_back(curr_point);
+        }
 
         *min_x = std::min(point.x - inflation_, *min_x);
         *min_y = std::min(point.y - inflation_, *min_y);
@@ -99,29 +127,31 @@ namespace tbd_costmap
                                   double *max_x, double *max_y)
     {
         // clear the previous polygons
-        if (previousPoints_.size() > 0)
+        if (previousPoints_.size() > 0 && previousOrients_.size() > 0)
         {
-            for (const auto &point: previousPoints_)
+            for (int i = 0; i < previousPoints_.size(); i++)
             {
-                auto polygon = constructPolygons(point, min_x, min_y, max_x, max_y);
+                auto polygon = constructPolygons(previousPoints_[i], previousOrients_[i], min_x, min_y, max_x, max_y);
                 setConvexPolygonCost(polygon, costmap_2d::FREE_SPACE);
             }
         }
 
         if ( ignoreTimeStamp_ || (lastMsgTime_ + ros::Duration(keepTimeSec_)) > ros::Time::now())
         {
-            for (const auto &point : latestPoints_)
+            for (int i = 0; i < latestPoints_.size(); i++)
             {
                 // update the internel costmap
                 // using the center point, create a polygon
-                auto polygon = constructPolygons(point, min_x, min_y, max_x, max_y);
+                auto polygon = constructPolygons(latestPoints_[i], latestOrients_[i], min_x, min_y, max_x, max_y);
                 setConvexPolygonCost(polygon, costmap_2d::LETHAL_OBSTACLE);
             }
             previousPoints_ = latestPoints_;
+            previousOrients_ = latestOrients_;
         }
         else
         {
             previousPoints_.clear();
+            previousOrients_.clear();
         }
     }
     void HumanLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
@@ -163,6 +193,7 @@ namespace tbd_costmap
                 }
                 // collect the data
                 latestPoints_.clear();
+                latestOrients_.clear();
                 for (const auto &body : msg.bodies)
                 {
                     for (const auto &joint : body.joints)
@@ -171,10 +202,12 @@ namespace tbd_costmap
                         if (joint.joint_id == joint.JOINT_PELVIS)
                         {
                             auto pelvisPoint = joint.pose.position;
+                            auto pelvisOrient = joint.pose.orientation; // get the orientation of the person
                             // try to transform it
                             geometry_msgs::Point transformedPoint;
                             tf2::doTransform(pelvisPoint, transformedPoint, transform);
                             latestPoints_.push_back(transformedPoint);
+                            latestOrients_.push_back(pelvisOrient);
                             break;
                         }
                     }

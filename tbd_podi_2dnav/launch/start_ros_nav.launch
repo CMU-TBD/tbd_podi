@@ -98,8 +98,8 @@
             <param name="global_costmap/interaction_space_layer/enabled" value="$(arg enable_human_costmaps)" />
             <param name="local_costmap/human_layer/enabled" value="$(arg enable_human_costmaps)" />
             <param name="local_costmap/interaction_space_layer/enabled" value="$(arg enable_human_costmaps)" />
-            <param name="SBPLLatticePlanner/primitive_filename" value="$(find tbd_podi_2dnav)/config/podi.mprim" />
-            <param name="base_global_planner" value="SBPLLatticePlanner" />
+            <!-- <param name="SBPLLatticePlanner/primitive_filename" value="$(find tbd_podi_2dnav)/config/podi.mprim" /> -->
+            <!-- <param name="base_global_planner" value="SBPLLatticePlanner" /> -->
             <remap from="cmd_vel" to="$(arg robot_command_topic)" />
             <remap from="odom" to="$(arg robot_odom_topic)" />
             <remap from="laser" to="$(arg robot_laser_topic)" />
