@@ -71,7 +71,7 @@ namespace tbd_costmap
         }
     }
 
-    std::vector<geometry_msgs::Point> HumanLayer::constructPolygons(geometry_msgs::Point point, geometry_msgs::Quaternion orient, double *min_x, double *min_y,
+    std::vector<geometry_msgs::Point> HumanLayer::constructPolygons(geometry_msgs::Point point, geometry_msgs::Quaternion orient, double vel, double *min_x, double *min_y,
                                                                     double *max_x, double *max_y)
     {
         // the polygon around the human to be returned
@@ -101,10 +101,11 @@ namespace tbd_costmap
 
             // major and minor diameters for the ellipse
             double a = (inflation_/(double)2);
-            double b = inflation_;
+            double b = inflation_ + vel; // changes based on velocity
+
 
             // ellipse offset to that their is more space in front of the person
-            double offset = (b/(double)3);
+            double offset = (b/(double)3) + vel*3;
 
             // gets x and y for an ellipse, the last term is for the rotation at an offset point (found graphically using desmos)
             // these are the parametric equations for the ellipse around the person
@@ -129,29 +130,64 @@ namespace tbd_costmap
         // clear the previous polygons
         if (previousPoints_.size() > 0 && previousOrients_.size() > 0)
         {
-            for (int i = 0; i < previousPoints_.size(); i++)
+            for (auto &item : previousPoints_)
             {
-                auto polygon = constructPolygons(previousPoints_[i], previousOrients_[i], min_x, min_y, max_x, max_y);
+
+                auto body_id = item.first;
+                auto orient = previousOrients_[body_id];
+                auto point = item.second;
+
+                // get the velocity if calculated previously
+                double vel = 0.0;
+                if (previousVelocities_.find(body_id) != previousVelocities_.end())
+                {
+                    vel = previousVelocities_[body_id];
+                }
+
+                auto polygon = constructPolygons(point, orient, vel, min_x, min_y, max_x, max_y);
                 setConvexPolygonCost(polygon, costmap_2d::FREE_SPACE);
+
             }
         }
 
         if ( ignoreTimeStamp_ || (lastMsgTime_ + ros::Duration(keepTimeSec_)) > ros::Time::now())
-        {
-            for (int i = 0; i < latestPoints_.size(); i++)
+        {         
+
+            // loop thorugh all of the points
+            for (auto &item : latestPoints_)
             {
+                
+                auto body_id = item.first;
+                auto orient = latestOrients_[body_id];
+                auto point = item.second;
+
+                // try and calculate the velocity
+                double vel = 0.0;
+                if (previousPoints_.find(body_id) != previousPoints_.end())
+                {
+                    auto prevPoint = previousPoints_[body_id];
+                    
+                    double dx = std::abs(point.x - prevPoint.x);
+                    double dy = std::abs(point.y - prevPoint.y);
+                    vel = std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
+
+                    latestVelocities_[body_id] = vel;
+                }
+
                 // update the internel costmap
                 // using the center point, create a polygon
-                auto polygon = constructPolygons(latestPoints_[i], latestOrients_[i], min_x, min_y, max_x, max_y);
+                auto polygon = constructPolygons(point, orient, vel, min_x, min_y, max_x, max_y);
                 setConvexPolygonCost(polygon, costmap_2d::LETHAL_OBSTACLE);
             }
             previousPoints_ = latestPoints_;
             previousOrients_ = latestOrients_;
+            previousVelocities_ = latestVelocities_;
         }
         else
         {
             previousPoints_.clear();
             previousOrients_.clear();
+            previousVelocities_.clear();
         }
     }
     void HumanLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
@@ -194,8 +230,13 @@ namespace tbd_costmap
                 // collect the data
                 latestPoints_.clear();
                 latestOrients_.clear();
+                latestVelocities_.clear();
                 for (const auto &body : msg.bodies)
                 {
+
+                    // std::cout << body.body_id << std::endl;
+                    auto body_id = body.body_id;
+
                     for (const auto &joint : body.joints)
                     {
                         // use pelvis as the center
@@ -206,8 +247,11 @@ namespace tbd_costmap
                             // try to transform it
                             geometry_msgs::Point transformedPoint;
                             tf2::doTransform(pelvisPoint, transformedPoint, transform);
-                            latestPoints_.push_back(transformedPoint);
-                            latestOrients_.push_back(pelvisOrient);
+
+                            // std::cout << "here" << std::endl;
+                            latestPoints_[body_id] = transformedPoint;
+                            latestOrients_[body_id] = pelvisOrient;
+                            // std::cout << "there" << std::endl;
                             break;
                         }
                     }
@@ -226,6 +270,8 @@ namespace tbd_costmap
         else
         {
             latestPoints_.clear();
+            latestOrients_.clear();
+            latestVelocities_.clear();
         }
     }
 

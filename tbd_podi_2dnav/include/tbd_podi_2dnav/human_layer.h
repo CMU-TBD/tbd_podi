@@ -6,7 +6,9 @@
 #include <tbd_ros_msgs/HumanBodyArray.h>
 #include <tf2_ros/buffer.h>
 #include <vector>
+#include <map>
 #include <geometry_msgs/Point.h>
+#include <cmath>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
 
@@ -23,13 +25,15 @@ namespace tbd_costmap
         double keepTimeSec_;
         bool ignoreTimeStamp_;
         ros::Time lastMsgTime_;
-        std::vector<geometry_msgs::Point> latestPoints_;
-        std::vector<geometry_msgs::Point> previousPoints_;
-        std::vector<geometry_msgs::Quaternion> latestOrients_;
-        std::vector<geometry_msgs::Quaternion> previousOrients_;
+        std::map<int, geometry_msgs::Point> latestPoints_;
+        std::map<int, geometry_msgs::Point> previousPoints_;
+        std::map<int, geometry_msgs::Quaternion> latestOrients_;
+        std::map<int, geometry_msgs::Quaternion> previousOrients_;
+        std::map<int, double> previousVelocities_;
+        std::map<int, double> latestVelocities_;
         dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
 
-        std::vector<geometry_msgs::Point> constructPolygons(geometry_msgs::Point center, geometry_msgs::Quaternion orient, double *min_x, double *min_y,
+        std::vector<geometry_msgs::Point> constructPolygons(geometry_msgs::Point center, geometry_msgs::Quaternion orient, double vel, double *min_x, double *min_y,
                                                             double *max_x, double *max_y);
         void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
 
