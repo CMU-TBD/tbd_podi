@@ -9,7 +9,7 @@
     <arg name="debug" default="false"/>
     <arg name="spawn_podi" default="true" />
     <arg name="xacro_file" default="$(find tbd_podi_description)/urdf/podi.urdf.xacro"/>
-    <arg name="local_world_name" default="NSH-3rd-Entryway-2020-11.world" />
+    <arg name="local_world_name" default="basic_tcs.world" />
     <arg name="world_name" default="$(find tbd_podi_gazebo)/worlds/$(arg local_world_name)" />
 
     <!-- <include file="$(find tbd_podi_gazebo)/launch/spawn_actor.launch">
@@ -28,7 +28,5 @@
         <arg name="xacro_file" value="$(arg xacro_file)" />
         <arg name="model_name" value="$(arg model_name)" />
     </include>
-
-    
     
 </launch>

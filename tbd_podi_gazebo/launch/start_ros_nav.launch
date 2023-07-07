@@ -5,7 +5,7 @@
     <arg name="initial_pose_x"          default="0" />
     <arg name="initial_pose_y"          default="0" />
     <arg name="initial_pose_a"          default="0" />
-    <arg name="map_path"                default="$(find tbd_podi_2dnav)/maps/sim-2020-11-nsh-3rd-entryway.yaml" />
+    <arg name="map_path"                default="$(find tbd_podi_2dnav)/maps/basic_tcs.yaml" />
 
 
     <!-- Start ROS Navigation -->

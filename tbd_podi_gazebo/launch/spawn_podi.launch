@@ -9,5 +9,7 @@
 
     <param name="$(arg robot_name)/robot_description" command="$(find xacro)/xacro $(arg xacro_file)" />
     <node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg model_name) -x $(arg model_x) -y $(arg model_y) -z $(arg model_z) -Y $(arg model_yaw) -param $(arg robot_name)/robot_description" respawn="false" output="screen" />
+    
+ <node name="$(arg robot_name)_uwb_odom" pkg="tbd_podi_gazebo" type="odom_dummy.py" args="$(arg robot_name) $(arg robot_name)/uwb/odom/" />
 
 </launch>
