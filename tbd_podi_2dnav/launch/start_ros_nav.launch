@@ -4,7 +4,7 @@
     <arg name="odom_frame_id"           default="podi_odom" />
     <arg name="base_frame_id"           default="podi_base_link" />
     <arg name="map_frame_id"            default="$(arg robot_name)_map" />
-    <arg name="map_name"                default="basic_tcs.yaml" />
+    <arg name="map_name"                default="tcs_perimeter.yaml" />
     <arg name="map_path"                default="$(find tbd_podi_2dnav)/maps/$(arg map_name)" />
     <arg name="initial_pose_x"          default="0" />
     <arg name="initial_pose_y"          default="0" />
