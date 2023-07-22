@@ -7,6 +7,9 @@
 
     <!-- Chassis -->
     <link name="$(arg robot_name)_base_link">
+    </link>
+    
+    <link name="$(arg robot_name)_base_link_dummy">
         <xacro:box_inertial x="0.35" y="0.25" z="0.14" mass="10" />
         <visual>
             <origin xyz="-0.045 0 0.148" rpy="0 0 0"/>
@@ -24,9 +27,14 @@
             </geometry>
         </collision>
     </link>
-    <gazebo reference="$(arg robot_name)_base_link">
+    <gazebo reference="$(arg robot_name)_base_link_dummy">
         <material>Gazebo/Red</material>
     </gazebo>
+    
+    <joint name = "dummy_joint" type = "fixed">
+    	<parent link="$(arg robot_name)_base_link"/>
+    	<child link="$(arg robot_name)_base_link_dummy"/>
+    </joint>
 
     <link name="$(arg robot_name)_top_plate">
         <xacro:box_inertial x="0.45" y="0.38" z="0.01" mass="0.5" />

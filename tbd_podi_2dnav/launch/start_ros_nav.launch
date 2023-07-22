@@ -9,14 +9,18 @@
     <arg name="initial_pose_x"          default="0" />
     <arg name="initial_pose_y"          default="0" />
     <arg name="initial_pose_a"          default="0" />
+    <arg name="localization_tf"	 default="false" />
     <arg name="enable_human_costmaps"   default="false" />
     
+    <group unless="$(arg localization_tf)">
+    	<node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 1 $(arg map_frame_id) $(arg odom_frame_id) 100"/>
+    </group>
 
 
     <!-- Note that these name will be prefixed by robot_name -->
     <arg name="robot_command_topic" default="nav_cmd_vel" />
     <arg name="robot_laser_topic"   default="laser" />
-    <arg name="robot_odom_topic"    default="odom" />
+    <arg name="robot_odom_topic"    default="odometry/filtered" />
 
     <group ns="$(arg robot_name)">
 
@@ -25,61 +29,13 @@
             <param name="frame_id" value="$(arg map_frame_id)"/>
         </node>
 
-        <!--- Run AMCL -->
+        <!-- Run AMCL -->
         <node pkg="amcl" type="amcl" name="amcl" output="screen">
-            <!--Minimum allowed number of particles. -->
-            <param name="min_particles" value="100"/>
-            <!--Maximum allowed number of particles. -->
-            <param name="max_particles" value="5000"/>
-
-            <!--Translational movement required before performing a filter update.-->
-            <param name="update_min_d" value="0.1"/>
-            <!--Rotational movement required before performing a filter update. -->
-            <param name="update_min_a" value="0.15"/>
-            <!--Number of filter updates required before resampling. -->
-            <param name="resample_interval" value="2"/>
-            <!--Number of filter updates required before resampling. -->
-            
-            <param name="transform_tolerance" value="0.3" />
-
-            <!-- Set the initiali pose in the map -->
-            <param name="initial_pose_x" value="$(arg initial_pose_x)" />
-            <param name="initial_pose_y" value="$(arg initial_pose_y)" />
-            <param name="initial_pose_a" value="$(arg initial_pose_a)" />
-
-            <!--Initial pose covariance (x*x), used to initialize filter with Gaussian distribution. -->
-            <param name="initial_cov_xx" value="0.2"/>
-            <!--Initial pose covariance (y*y), used to initialize filter with Gaussian distribution. -->
-            <param name="initial_cov_yy" value="0.2"/>
-            <!--Initial pose covariance (yaw*yaw), used to initialize filter with Gaussian distribution. -->
-            <param name="initial_cov_aa" value="0.2"/>
-            <!--When set to true, AMCL will subscribe to the map topic rather than making a service call to receive its map. New in navigation XXXX-->
-            <param name="use_map_topic" value="true"/>
-
-            <!--Laser model parameters-->
-            <param name="laser_model_type" value="beam"/>
-            <!--How many evenly-spaced beams in each scan to be used when updating the filter. -->
-            <param name="laser_max_beams" value="30"/>
-            <!--Mixture weight for the z_hit part of the model. -->
-            <param name="laser_z_hit" value="0.95"/>
-            <!--Mixture weight for the z_rand part of the model. -->
-            <param name="laser_z_rand" value="0.05"/>
-            <!--Standard deviation for Gaussian model used in z_hit part of the model. -->
-            <param name="laser_sigma_hit" value="0.2"/>
-            <!-- Maximum distance to do obstacle inflation on map, for use in likelihood_field model. -->
-            <param name="laser_likelihood_max_dist" value="2.0"/>
-
-            <!-- Odometery model parameters -->
-            <!--Which model to use, either "diff" or "omni". -->
-            <param name="odom_model_type" value="diff-corrected"/>
-            <!-- Noise in odometry is rotation estimate from the rotational component of the robot is motion-->
-            <param name="odom_alpha1" value="0.005"/>
-            <!-- Noise in odometry is rotation estimate from translational component of the robotis  motion-->
-            <param name="odom_alpha2" value="0.005"/>
-            <!-- Noise in odometry is translation estimate from the translational component of the robot is motion-->
-            <param name="odom_alpha3" value="0.010"/>
-            <!-- Noise in odometry is translation estimate from the rotational component of the robot is motion-->
-            <param name="odom_alpha4" value="0.005"/>
+    	    <rosparam file="$(find tbd_podi_2dnav)/config/amcl_params.yaml" command = "load" ns = "" />        
+	    <!-- Set the initial pose in the map -->
+	    <param name="initial_pose_x" value="$(arg initial_pose_x)" />
+	    <param name="initial_pose_y" value="$(arg initial_pose_y)" />
+	    <param name="initial_pose_a" value="$(arg initial_pose_a)" />
 
             <remap from="scan" to="$(arg robot_laser_topic)" />
             <param name="odom_frame_id" value="$(arg odom_frame_id)" />
@@ -87,22 +43,27 @@
             <param name="global_frame_id" value="$(arg map_frame_id)" />
         </node>
 
+        <!-- Run robot_localization -->
+        <!-- (map to odom)/all -->
+        <node pkg="robot_localization" type="ekf_localization_node" name="localization_odom">
+             <rosparam file="$(find tbd_podi_2dnav)/config/localization_odom_params.yaml" command = "load" ns = "" subst_value="True"/>
+        </node>
+        
+        <!-- (odom to base_link)/continuous -->
+        <node pkg="robot_localization" type="ekf_localization_node" name="localization_base">
+             <rosparam file="$(find tbd_podi_2dnav)/config/localization_base_params.yaml" command = "load" ns = "" subst_value="True"/>
+        </node>
+
         <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" required="true">
             <rosparam file="$(find tbd_podi_2dnav)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
             <rosparam file="$(find tbd_podi_2dnav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
             <rosparam file="$(find tbd_podi_2dnav)/config/local_costmap_params.yaml" command="load" />
             <rosparam file="$(find tbd_podi_2dnav)/config/global_costmap_params.yaml" command="load" />
-            <rosparam file="$(find tbd_podi_2dnav)/config/sbpl_global_params.yaml" command="load" />
             <rosparam file="$(find tbd_podi_2dnav)/config/base_local_planner_params.yaml" command="load" />
-            <param name="global_costmap/human_layer/enabled" value="$(arg enable_human_costmaps)" />
-            <param name="global_costmap/interaction_space_layer/enabled" value="$(arg enable_human_costmaps)" />
-            <param name="local_costmap/human_layer/enabled" value="$(arg enable_human_costmaps)" />
-            <param name="local_costmap/interaction_space_layer/enabled" value="$(arg enable_human_costmaps)" />
-            <param name="SBPLLatticePlanner/primitive_filename" value="$(find tbd_podi_2dnav)/config/podi_50mm.mprim" />
-            <!-- <param name="base_global_planner" value="SBPLLatticePlanner" /> -->
-            <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner" /> -->
-            <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" /> -->
-            <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
+
+            <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+            <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+
             <remap from="cmd_vel" to="$(arg robot_command_topic)" />
             <remap from="odom" to="$(arg robot_odom_topic)" />
             <remap from="laser" to="$(arg robot_laser_topic)" />

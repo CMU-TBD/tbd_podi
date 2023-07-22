@@ -16,7 +16,20 @@ class odomDummy:
         self.currentPoseRPY = None
         self.currentPoseRPYNoisy = None
         if(cov is None):
-            self.covariance = np.diag([.1, .1, .1, 0, 0, 0])
+            self.covariance = np.array([[9.8e-03, 0, 0, 0, 0, 0],
+                                        [0, 2.4e-01, 0, 0, 0, 0],
+                                        [0, 0, 1.8e-01, 0, 0, 0],
+                                        [0, 0, 0, 1e-06, 0, 0],
+                                        [0, 0, 0, 0, 1e-06, 0],
+                                        [0, 0, 0, 0, 0, 1e-06]])
+            
+            
+                                #np.array([[6.5e-05, 0, 0, 0, 0, 0],
+                              #          [0, 3.6e-04, 0, 0, 0, 0],
+                              #          [0, 0, 2.2e-04, 0, 0, 0],
+                              #          [0, 0, 0, 1e-6, 0, 0],
+                              #          [0, 0, 0, 0, 1e-6, 0],
+                              #          [0, 0, 0, 0, 0, 1e-6]])#np.diag([.05, .05, .05, 0, 0, 0])
         else:
             self.covariance = cov
 
@@ -33,7 +46,8 @@ class odomDummy:
     def getWorldPose(self, msgModelStates, msgTime):
         self.currentOdomTrue = PoseStamped()
         self.currentOdomTrue.header.stamp = msgTime
-        self.currentOdomTrue.header.frame_id = self.model_name + "_base_link"
+        #self.currentOdomTrue.header.frame_id = self.model_name + "_base_link"
+        self.currentOdomTrue.header.frame_id = self.model_name + "_map"
         try:
             idx = msgModelStates.name.index(self.model_name)
             self.currentOdomTrue.pose = msgModelStates.pose[idx]
@@ -67,7 +81,12 @@ class odomDummy:
                 msgOdom.header = self.currentOdomTrue.header
                 msgOdom.pose.pose = self.addGaussianNoise(self.currentOdomTrue.pose)
 
-                msgOdom.pose.covariance = self.covariance.flatten('C') #float64[36] row-major representation of 6x6 cov matrix
+                msgOdom.pose.covariance = np.array([[3e-01, 0, 0, 0, 0, 0],
+                                                    [0, 3e-01, 0, 0, 0, 0],
+                                                    [0, 0, 3e-01, 0, 0, 0],
+                                                    [0, 0, 0, 1e-06, 0, 0],
+                                                    [0, 0, 0, 0, 1e-06, 0], 
+                                                    [0, 0, 0, 0, 0, 1e-06]]).flatten('C') #float64[36] row-major representation of 6x6 cov matrix
 
                 self.odomPubNoisy.publish(msgOdom)
                 self.odomPubTrue.publish(self.currentOdomTrue)

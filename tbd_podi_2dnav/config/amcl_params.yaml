@@ -1,0 +1,46 @@
+  min_particles: 200        # [default: 100] minimum allowed number of particles
+  max_particles: 5000       # [default: 5000] maximum allowed number of particles
+
+  kld_err: 0.01             # [default: 0.01] maximum error between the true distribution and the estimated distribution
+  kld_z: 0.99               # [default: 0.99] upper standard normal quantile for (1 - p), where p is the probability that the error on the estimated distribution will be less than kld_err
+
+  update_min_d: 0.1         # [default: 0.2 meters] translational movement required before performing a filter update
+  update_min_a: 0.15        # [default: pi/6 radians] rotational movement required before performing a filter update
+  resample_interval: 2      # [default: 3] number of filter updates required before resampling
+
+  transform_tolerance: 0.3  # [default: 0.1 seconds] time with which to post-date the transform that is published, to indicate that this transform is valid into the future
+
+  recovery_alpha_slow: 0    # [default: 0.0 (disabled)] exponential decay rate for the slow average weight filter, used in deciding when to recover by adding random poses. A good value might be 0.001
+  recovery_alpha_fast: 0    # [default: 0.0 (disabled)] exponential decay rate for the fast average weight filter, used in deciding when to recover by adding random poses. A good value might be 0.1
+
+  initial_cov_xx: 0.1       # [default: 0.5*0.5 meters] initial pose covariance (x*x), used to initialize filter with Gaussian distribution
+  initial_cov_yy: 0.1       # [default: 0.5*0.5 meters] initial pose covariance (y*y), used to initialize filter with Gaussian distribution
+  initial_cov_aa: 0.1       # [default: (pi/12)*(pi/12) rad] initial pose covariance (yaw*yaw), used to initialize filter with Gaussian distribution
+
+  gui_publish_rate: -1.0    # [default: -1.0 Hz (disabled)] maximum rate (Hz) at which scans and paths are published for visualization, -1.0 to disable
+  save_pose_rate: 0.5       # [default: 0.5 Hz] maximum rate (Hz) at which to store the last estimated pose and covariance to the parameter server, in the variables ~initial_pose_* and ~initial_cov_*. This saved pose will be used on subsequent runs to initialize the filter. -1.0 to disable
+
+  use_map_topic: True       # [default: False] when set to true, AMCL will subscribe to the map topic rather than making a service call to receive its map
+  first_map_only: False     # [default: False] when set to true, AMCL will only use the first map it subscribes to, rather than updating each time a new one is received
+
+  selective_resampling: False # [default: False] when set to true, will reduce the resampling rate when not needed and help avoid particle deprivation. The resampling will only happen if the effective number of particles (N_eff = 1/(sum(k_i^2))) is lower than half the current number of particles. Reference: Grisetti, Giorgio, Cyrill Stachniss, and Wolfram Burgard. "Improved techniques for grid mapping with rao-blackwellized particle filters." IEEE transactions on Robotics 23.1 (2007): 34.
+
+  laser_min_range: -1.0     # [default: -1.0] minimum scan range to be considered; -1.0 will cause the laser's reported minimum range to be used
+  laser_max_range: -1.0     # [default: -1.0] maximum scan range to be considered; -1.0 will cause the laser's reported maximum range to be used
+  laser_max_beams: 30       # [default: 30] how many evenly-spaced beams in each scan to be used when updating the filter
+  laser_z_hit: 0.95         # [default: 0.95] mixture weight for the z_hit part of the model
+  laser_z_short: 0.1        # [default: 0.1] mixture weight for the z_short part of the model
+  laser_z_max: 0.05         # [default: 0.05] mixture weight for the z_max part of the model
+  laser_z_rand: 0.05        # [default: 0.05] mixture weight for the z_rand part of the model
+  laser_sigma_hit: 0.2      # [default: 0.2 meters] standard deviation for Gaussian model used in z_hit part of the model
+  laser_lambda_short: 0.1   # [default: 0.1] exponential decay parameter for z_short part of model
+  laser_likelihood_max_dist: 2.0 # [default: 2.0 meters] maximum distance to do obstacle inflation on map, for use in likelihood_field model
+  laser_model_type: "likelihood_field"  # [default: "likelihood_field"] which model to use, either beam, likelihood_field, or likelihood_field_prob (same as likelihood_field but incorporates the beamskip feature, if enabled)
+
+  odom_model_type: "diff-corrected" # [default: "diff"] which model to use, either "diff", "omni", "diff-corrected" or "omni-corrected"
+  odom_alpha1: 0.005         # [default: 0.2] specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion
+  odom_alpha2: 0.005         # [default: 0.2] specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion
+  odom_alpha3: 0.01          # [default: 0.2] specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion
+  odom_alpha4: 0.005         # [default: 0.2] specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion
+  odom_alpha5: 0.2           # [default: 0.2] translation-related noise parameter (only used if model is "omni")
+  tf_broadcast: False       # [default: True] set this to false to prevent amcl from publishing the transform between the global frame and the odometry frame

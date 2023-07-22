@@ -1,0 +1,113 @@
+frequency: 10                       # [default: 30] the real valued frequency, in Hz, at which the filter produces a state estimate
+sensor_timeout: .1                 # [default: 0.033333333] the real-valued period, in seconds, after which we consider any sensor to have timed out; inverse of minimum frequency
+two_d_mode: True                    # [default: False] if True, fuses 0 values for all z, roll, and pitch variables
+transform_time_offset: 0            # [default: 0] future-dates transform timestamps by this amount
+transform_timeout: 0                # [default: 0] how long to wait if a transformation is not available yet
+publish_tf: $(arg localization_tf)                    # [default: True] if True, publishes transform from world_frame to base_link_frame
+publish_acceleration: True          # [default: False] if True, publishes linear acceleration
+permit_corrected_publication: False # [default: False] if True, states are republished on the same time stamp when new (pre-dated) data arrives
+print_diagnostics: False            # [default: False] if True, publishes diagnostic messages to /diagnostics topic
+
+map_frame: $(arg map_frame_id)
+odom_frame: $(arg odom_frame_id)
+base_link_frame: $(arg base_frame_id)
+world_frame: $(arg odom_frame_id)
+
+initial_state: [$(arg initial_pose_x), $(arg initial_pose_y), 0, 0, 0, $(arg initial_pose_a),
+                0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+use_control: False                  # [default: False] if True, listens to cmd_vel topic to generate an acceleration term used in state prediction; overridden by IMU
+stamped_control: False              # [default: False] if True, looks for TwistStamped message instead of Twist
+control_timeout: 0.2                # [default: sensor_timeout] if no control command is received in this amount of time, control-based acceleration ceases to be applied
+control_config: [True, False, False, False, False, True]  # [default: None/turns off use_control] controls which variables in cmd_vel are used in state prediction ([x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel])
+acceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: 6x[1.0]] specifies acceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+deceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: acceleration_limits] specifies deceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+acceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: 6x[1.0]] controls how fast robot reaches acceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+deceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: acceleration_gains] controls how fast robot reaches deceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+
+smooth_lagged_data: True            # [default: False] if True, enables filter to revert to state before lagged measurements and reprocess to current time
+history_length: 0.25                # [default: 0s] if True and smooth_lagged_data is True, specifies the number of seconds for which the filter retains state and measurement history
+
+debug: False                        # [default: False] if True, node runs in debug mode
+debug_out_file: ""                  # [default: "robot_localization_debug.txt"] the file to which debug output is written
+
+reset_on_time_jump: False           # [default: False] if True, resets filter to uninitialized state when a jump back in time is detected
+predict_to_current_time: False      # [default: False] if True, filter predicts up to current time step (on top of predict/correct up to latest measurement time)
+disabled_at_startup: False          # [default: False] if True, does not run the filter on start
+
+process_noise_covariance: [0.05, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0.05, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0.06, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0.03, 0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0.03, 0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0.06, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0.025, 0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0.025, 0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0.04, 0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0.01, 0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.01, 0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.02, 0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.01, 0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.01, 0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.015]
+# [default: diag(0.05, 0.05, 0.06, 0.03, 0.03, 0.06, 0.025, 0.025, 0.04, 0.01, 0.01, 0.02, 0.01, 0.01, 0.015)]
+# the process noise covariance (Q)
+
+dynamic_process_noise_covariance: False # [default: False] if True, scales process_noise_covariance based on robot velocity
+initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    1e-9, 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    1e-9, 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    1e-9, 0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    1e-9, 0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    1e-9, 0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    1e-9, 0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    1e-9,  0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1e-9,  0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1e-9,  0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]
+# [default: diag(15x[1e-9])]
+# error in initial state estimate (P)
+
+# sensors
+
+# Odom output
+odom0: "odom"                 # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+odom0_config: [False, False, False, False, False, False,                # [default: None] which variables are fused from this message, in order:
+               True, True, False, False, False, False,                # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+               False, False, False]                         #  x_accel, y_accel, z_accel]
+odom0_queue_size: 10                            # [default: 1] callback queue size; filter can incorporate all measurements if sensor frequency higher than EKF node
+odom0_differential: False                       # [default: False] if True, converts measurement to velocity before fusion
+odom0_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+odom0_nodelay: False                            # [default: False] sets tcpNoDelay transport hint
+odom0_pose_rejection_threshold: 0.5             # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+odom0_twist_rejection_threshold: 1.0            # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+
+# Twist output
+#twist0: "twist_name"                       # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+#twist_config: [False, False, False, False, False, False,     # [default: None] which variables are fused from this message, in order:
+#               True, True, True, True, True, True,           # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+#               False, False, False]                          #  x_accel, y_accel, z_accel]
+#twist0_queue_size: 10                            # [default: 1] callback queue size; filter can incorporate all measurements if sensor frequency higher than EKF node
+#twist0_differential: False                       # [default: False] if True, converts measurement to velocity before fusion
+#twist0_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+#twist0_nodelay: False                            # [default: False] sets tcpNoDelay transport hint
+#twist0_rejection_threshold: 1.0                  # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+
+# IMU output
+imu0: "uwb/imu"                          # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+imu0_config: [False, False, False, True, True, True,      # [default: None] which variables are fused from this message, in order:
+               False, False, False, True, True, True,      # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+               True, True, True]                           #  x_accel, y_accel, z_accel]
+imu0_queue_size: 10                               # [default: 1] callback queue size; filter can incorporate all measurements if sensor frequency higher than EKF node
+imu0_differential: False                          # [default: False] if True, converts measurement to velocity before fusion
+imu0_relative: False                              # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+imu0_nodelay: False                               # [default: False] sets tcpNoDelay transport hint
+imu0_pose_rejection_threshold: 0.5                # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+imu0_angular_velocity_rejection_threshold: 1.0    # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+imu0_linear_acceleration_rejection_threshold: 1.5 # [default: numeric_limits<double>::max()] distance (Mahalanobis) at which outlier data is rejected
+imu0_remove_gravitational_acceleration: False     # [default: False] if True, removes acceleration in z due to gravity from linear acceleration data
+gravitational_acceleration: 9.80665               # [default: 9.80665 m/s^2] amount of z-acceleration to remove from IMU data

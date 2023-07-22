@@ -12,12 +12,13 @@
       <wheelTorque>15</wheelTorque>
       <publishWheelJointState>true</publishWheelJointState>
       <publishWheelTF>false</publishWheelTF>
+      <publishOdom>true</publishOdom>
       <wheelAcceleration>1</wheelAcceleration>
       <commandTopic>/RosAria/cmd_vel</commandTopic> <!-- We choose to name it to match the robot's IRL command name-->
       <odometryTopic>$(arg robot_name)/odom</odometryTopic>
       <odometryFrame>$(arg robot_name)_odom</odometryFrame>
       <robotBaseFrame>$(arg robot_name)_base_link</robotBaseFrame>
-      <odometrySource>encoder</odometrySource>      <!-- The options are world and encoder. World means getting it straight from Gazebo -->
+      <odometrySource>world</odometrySource>      <!-- The options are world and encoder. World means getting it straight from Gazebo -->
       <!-- Zhi (2021-04-12) We use the world instead of encoder because the odometry is so much more worse in simulation for some reason. 
       When Podi turns, the whole laser map is moved by nearly 45 degrees which is unrealistics. If you can figure out the difference. Dropping
       to encoder might eventually make sense.
