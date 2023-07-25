@@ -1,0 +1,44 @@
+<launch>
+
+	<arg name = "robot_name"	default = "podi" />
+	<arg name = "map_name"		default = "tcs_perimeter.yaml" />
+	<arg name = "map_path"		default = "$(find tbd_podi_2dnav)/maps/$(arg map_name)" />
+	
+	<arg name = "initial_pose_x"	default = "0.2" />
+	<arg name = "initial_pose_y"	default = "3.1" />
+	<arg name = "initial_pose_yaw"	default = "0" />	
+	
+	<arg name = "odom_frame_id"	default = "$(arg robot_name)_odom" />
+	<arg name = "base_frame_id"	default = "$(arg robot_name)_base_link" />
+	<arg name = "map_frame_id"	default = "$(arg robot_name)_map" />
+
+	<arg name = "planner_cmd_topic" default = "nav_cmd_vel"/>
+	<arg name = "laser_topic" default="laser" />
+	<arg name = "odom_topic" default = "odometry/filtered" />
+
+	<group ns = "$(arg robot_name)">
+	<rosparam file="$(find tbd_podi_common)/config/start_podi_navigation_params.yaml" command = "load" subst_value="True"/>
+
+	<!-- map_server (publishes map) -->
+		<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_path)"/>
+
+	<!-- amcl (LIDAR-based localization) -->
+        <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    	    <rosparam file="$(find tbd_podi_2dnav)/config/amcl_params.yaml" command = "load" subst_value="True"/>        
+            <remap from="scan" to="$(arg laser_topic)" />
+        </node>
+			
+	<!-- robot_localization (sensor fusion for localization) -->
+        <!-- (map to odom)/all -->
+        <node pkg="robot_localization" type="ekf_localization_node" name="localization_odom">
+             <rosparam file="$(find tbd_podi_2dnav)/config/localization_odom_params.yaml" command = "load" subst_value="True"/>
+        </node>
+        
+        <!-- (odom to base_link)/continuous -->
+        <node pkg="robot_localization" type="ekf_localization_node" name="localization_base">
+             <rosparam file="$(find tbd_podi_2dnav)/config/localization_base_params.yaml" command = "load" subst_value="True"/>
+        </node>
+	
+	</group>
+
+</launch>

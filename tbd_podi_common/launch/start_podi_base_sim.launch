@@ -1,0 +1,37 @@
+<launch>
+<!-- Basic startup nodes for the simulated Podi. -->
+
+<!-- Load parameters -->
+<group ns = "$(arg robot_name)">
+	<rosparam file="$(find tbd_podi_common)/config/start_podi_base_params.yaml" command = "load" subst_value = "True"/>
+	<param name="robot_description" command="$(find xacro)/xacro $(arg xacro)" />
+</group>
+
+<!-- Spawn Gazebo elements -->
+<include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args = "true"/>
+
+<node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg model_name) -x $(arg model_x) -y $(arg model_y) -z $(arg model_z) -Y $(arg model_yaw) -param $(arg robot_name)/robot_description" respawn="false" output="screen" />
+
+<!-- Launch robot nodes -->
+<group ns = "$(arg robot_name)">
+	<!-- robot_state (publishes transforms between links) -->
+	<node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "robot_state_publisher" output="$(arg output)"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	
+	<!-- control_robot (fuses commanded velocities) --> 
+	<node name = "robot_controller" pkg = "tbd_podi_common" type = "control_robot" output="$(arg output)">
+		<remap from="output_cmd_vel" to="$(arg motor_cmd_topic)"/>
+		<remap from="cmd_vel" to="$(arg planner_cmd_topic)"/>
+		<remap from="enable_motors" to="/$(arg robot_name)/RosAria/enable_motors"/>
+		<remap from="disable_motors" to="/$(arg robot_name)/RosAria/disable_motors"/>
+	</node>
+	
+	<!-- fake UWB sensor -->
+	 <node name="uwb_odom" pkg="tbd_podi_gazebo" type="odom_dummy.py" args="$(arg robot_name) $/uwb/pose" />
+	
+</group>
+
+<!-- rviz (visualize) -->
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_path)" required="true" if="$(arg launch_rviz)"/>
+
+</launch>

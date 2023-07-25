@@ -1,0 +1,42 @@
+<launch>
+	<arg name="robot_name"						default="podi" />
+	<arg name="rosaria_port" 					default="/dev/ttyUSB0"/>
+	<arg name="rosaria_publish_lasers" 			default="true"/>
+	<arg name="joystick_device_path" 			default="/dev/input/js0"/>
+	<arg name="rosbag_recording_base_path" 		default="$(find tbd_podi_common)/bagfiles/"/>
+	<arg name="playback_rosbag_path" 			default=""/>
+	<arg name="xacro" 							default="$(find tbd_podi_description)/urdf/podi.urdf.xacro"/>  	
+	<arg name="launch_rviz" 					default="false" />
+	<arg name="rviz_config_path" 				default="$(find tbd_podi_common)/rviz/podi_default_laser.rviz" />
+	<arg name="sim" 							default="false"/>
+	<arg name="use_joy" 						default="true" />
+	<arg name="enabling_switch" 				default="true" />
+	<arg name="motor_topic_name" 				default="/RosAria/cmd_vel" />
+	<arg name="laser_topic_name"				default="$(arg robot_name)/laser" />
+	<arg name="nav_topic_name" 					default="nav_cmd_vel" />
+	<arg name="output" 							default="screen" />
+
+	<include file="$(find tbd_podi_common)/launch/control_robot_base.launch">
+		<arg name="output" 						value="$(arg output)" />
+		<arg name="robot_name" 					value="$(arg robot_name)"/>
+		<arg name="rosaria_port" 				value="$(arg rosaria_port)"/>
+		<arg name="rosaria_publish_lasers" 		value="$(arg rosaria_publish_lasers)"/>
+		<arg name="joystick_device_path" 		value="$(arg joystick_device_path)"/>
+		<arg name="rosbag_recording_base_path" 	value="$(arg rosbag_recording_base_path)"/>
+		<arg name="playback_rosbag_path" 		value="$(arg playback_rosbag_path)"/>
+		<arg name="xacro"						value="$(arg xacro)"/>
+		<arg name="launch_rviz"					value="$(arg launch_rviz)"/>
+		<arg name="rviz_config_path"			value="$(arg rviz_config_path)"/>
+		<arg name="sim" 						value="$(arg sim)"/>
+		<arg name="use_joy" 					value="$(arg use_joy)" />
+		<arg name="motor_topic_name" 			value="$(arg motor_topic_name)" />
+		<arg name="enabling_switch" 			value="$(arg enabling_switch)" />
+		<arg name="nav_topic_name" 				value="$(arg nav_topic_name)" />
+	</include>	
+
+	<include file="$(find zed_wrapper)/launch/zed2.launch">
+		<arg name="base_frame" value="$(arg robot_name)_front_camera_mount" />
+		<arg name="camera_name" value="$(arg robot_name)_front_camera" />
+	</include>
+
+</launch>

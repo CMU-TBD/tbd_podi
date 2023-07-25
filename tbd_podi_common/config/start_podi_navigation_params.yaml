@@ -1,0 +1,2 @@
+map_server:
+  frame_id: "$(arg robot_name)_map"

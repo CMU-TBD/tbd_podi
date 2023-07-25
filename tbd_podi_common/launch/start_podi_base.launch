@@ -1,0 +1,35 @@
+<launch>
+<!-- Basic startup nodes for the real Podi. -->
+
+<group ns="$(arg robot_name)">
+	<rosparam file="$(find tbd_podi_common)/config/start_podi_base_params.yaml" command = "load" subst_value = "True"/>
+	<param name="robot_description" command="$(find xacro)/xacro $(arg xacro)" />
+
+	<!-- ROSARIA (communicates with hardware) -->
+	<node name = "RosAria" pkg = "rosaria" type = "RosAria" output="$(arg output)">
+		<remap from="$(arg robot_name)/RosAria/lms1xx_1_laserscan" to="$(arg laser_topic)" />
+	</node>
+	
+	<!-- robot_state (publishes transforms between links) -->
+	<node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "robot_state_publisher" output="$(arg output)"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	
+	<!-- control_robot (fuses commanded velocities) --> 
+	<node name = "robot_controller" pkg = "tbd_podi_common" type = "control_robot" output="$(arg output)">
+		<remap from="output_cmd_vel" to="$(arg motor_cmd_topic)"/>
+		<remap from="cmd_vel" to="$(arg planner_cmd_topic)"/>
+		<remap from="enable_motors" to="$(arg robot_name)/RosAria/enable_motors"/>
+		<remap from="disable_motors" to="$(arg robot_name)/RosAria/disable_motors"/>
+	</node>
+
+	<!-- joy (connects to controller) -->
+	<node name = "joy_node" pkg = "joy" type = "joy_node" respawn = "true" output="$(arg output)"/>
+
+	<!-- UWB -->
+	<node name="uwb" pkg = "tbd_podi_pozyx" type = "uwb_odom.py" output = "$(arg output)" args="$(arg uwb_frame) $(arg robot_name)"/>
+</group>
+
+<!-- rviz (visualize) -->
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_path)" required="true" if="$(arg launch_rviz)"/>
+
+</launch>
