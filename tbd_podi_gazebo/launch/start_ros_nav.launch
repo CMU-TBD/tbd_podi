@@ -4,7 +4,7 @@
     <arg name="rviz_config_path"        default="$(find tbd_podi_gazebo)/rviz/localization.rviz" />
     <arg name="initial_pose_x"          default=".2" />
     <arg name="initial_pose_y"          default="3.1" />
-    <arg name="initial_pose_a"          default="0" />
+    <arg name="initial_pose_yaw"          default="0" />
     <arg name="map_path"                default="$(find tbd_podi_2dnav)/maps/tcs_perimeter.yaml" />
 
 
@@ -12,7 +12,7 @@
     <include file="$(find tbd_podi_2dnav)/launch/start_ros_nav.launch">
         <arg name="initial_pose_x"      value="$(arg initial_pose_x)" />
         <arg name="initial_pose_y"      value="$(arg initial_pose_y)" />
-        <arg name="initial_pose_a"      value="$(arg initial_pose_a)" />
+        <arg name="initial_pose_yaw"      value="$(arg initial_pose_yaw)" />
         <arg name="map_path"            value="$(arg map_path)" />
     </include>
 

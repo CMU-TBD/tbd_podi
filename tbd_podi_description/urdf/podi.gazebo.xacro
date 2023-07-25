@@ -13,6 +13,9 @@
       <publishWheelJointState>true</publishWheelJointState>
       <publishWheelTF>false</publishWheelTF>
       <publishOdom>true</publishOdom>
+      <publishOdomTF>false</publishOdomTF>
+      <publishTf>true</publishTf>
+      <rosDebugLevel>na</rosDebugLevel>
       <wheelAcceleration>1</wheelAcceleration>
       <commandTopic>/RosAria/cmd_vel</commandTopic> <!-- We choose to name it to match the robot's IRL command name-->
       <odometryTopic>$(arg robot_name)/odom</odometryTopic>

@@ -3,7 +3,7 @@ sensor_timeout: .1                 # [default: 0.033333333] the real-valued peri
 two_d_mode: True                    # [default: False] if True, fuses 0 values for all z, roll, and pitch variables
 transform_time_offset: 0            # [default: 0] future-dates transform timestamps by this amount
 transform_timeout: 0                # [default: 0] how long to wait if a transformation is not available yet
-publish_tf: $(arg localization_tf)                    # [default: True] if True, publishes transform from world_frame to base_link_frame
+publish_tf: True                   # [default: True] if True, publishes transform from world_frame to base_link_frame
 publish_acceleration: True          # [default: False] if True, publishes linear acceleration
 permit_corrected_publication: False # [default: False] if True, states are republished on the same time stamp when new (pre-dated) data arrives
 print_diagnostics: False            # [default: False] if True, publishes diagnostic messages to /diagnostics topic
@@ -13,7 +13,7 @@ odom_frame: $(arg odom_frame_id)
 base_link_frame: $(arg base_frame_id)
 world_frame: $(arg odom_frame_id)
 
-initial_state: [$(arg initial_pose_x), $(arg initial_pose_y), 0, 0, 0, $(arg initial_pose_a),
+initial_state: [$(arg initial_pose_x), $(arg initial_pose_y), 0, 0, 0, $(arg initial_pose_yaw),
                 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 use_control: False                  # [default: False] if True, listens to cmd_vel topic to generate an acceleration term used in state prediction; overridden by IMU

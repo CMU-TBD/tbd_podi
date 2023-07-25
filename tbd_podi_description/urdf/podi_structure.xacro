@@ -10,7 +10,29 @@
     <xacro:property name="display_width" value="0.01" />
     <xacro:property name="display_height" value="0.147" />
     <xacro:property name="display_length" value="0.197" />
-
+    
+    <link name="$(arg robot_name)_uwb">
+    	<xacro:box_inertial x="0.01" y="0.01" z="0.01" mass="0.1" />
+    	<visual>
+    		<origin xyz="0 0 0" rpy="0 0 0"/>
+    		<geometry>
+                	<box size="0.01 0.01 0.01" />
+            	</geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+    </link>
+    
+    <joint name="$(arg robot_name)_base_to_uwb" type="fixed">
+        <origin xyz="0 0 1.054" rpy="0 0 0"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_uwb"/>
+    </joint>
+    
     <link name="$(arg robot_name)_laser_scanner">
         <xacro:box_inertial x="0.105" y="0.102" z="0.152" mass="0.429" />
         <visual>

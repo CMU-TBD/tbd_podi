@@ -46,7 +46,6 @@ class odomDummy:
     def getWorldPose(self, msgModelStates, msgTime):
         self.currentOdomTrue = PoseStamped()
         self.currentOdomTrue.header.stamp = msgTime
-        #self.currentOdomTrue.header.frame_id = self.model_name + "_base_link"
         self.currentOdomTrue.header.frame_id = self.model_name + "_map"
         try:
             idx = msgModelStates.name.index(self.model_name)
