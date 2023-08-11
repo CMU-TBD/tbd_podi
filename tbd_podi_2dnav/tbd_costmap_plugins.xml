@@ -6,5 +6,8 @@
     <class type="tbd_costmap::InteractionSpaceLayer"  base_class_type="costmap_2d::Layer">
       <description>Listens to InteractionSpaces and generate boundaries around them.</description>
     </class>
+    <class type="tbd_costmap::OpenSpaceLayer" base_class_type="costmap_2d::Layer">
+      <description>Adds cost to spaces far from static obstacles.</description>
+    </class>
   </library>
 </class_libraries>

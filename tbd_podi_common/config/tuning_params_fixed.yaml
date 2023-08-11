@@ -1,0 +1,189 @@
+map_server:
+  frame_id: "$(arg robot_name)_map"
+
+amcl:
+  initial_pose_x: $(arg initial_pose_x)
+  initial_pose_y: $(arg initial_pose_y)
+  initial_pose_a: $(arg initial_pose_yaw)
+
+  odom_frame_id: $(arg odom_frame_id)
+  base_frame_id: $(arg base_frame_id)
+  global_frame_id: $(arg map_frame_id)
+
+  use_map_topic: True       # [default: False] when set to true, AMCL will subscribe to the map topic rather than making a service call to receive its map
+  first_map_only: False     # [default: False] when set to true, AMCL will only use the first map it subscribes to, rather than updating each time a new one is received
+  selective_resampling: False # [default: False] when set to true, will reduce the resampling rate when not needed and help avoid particle deprivation. The resampling will only happen if the effective number of particles (N_eff = 1/(sum(k_i^2))) is lower than half the current number of particles. Reference: Grisetti, Giorgio, Cyrill Stachniss, and Wolfram Burgard. "Improved techniques for grid mapping with rao-blackwellized particle filters." IEEE transactions on Robotics 23.1 (2007): 34.
+
+  gui_publish_rate: -1.0    # [default: -1.0 Hz (disabled)] maximum rate (Hz) at which scans and paths are published for visualization, -1.0 to disable
+  save_pose_rate: 0.5       # [default: 0.5 Hz] maximum rate (Hz) at which to store the last estimated pose and covariance to the parameter server, in the variables ~initial_pose_* and ~initial_cov_*. This saved pose will be used on subsequent runs to initialize the filter. -1.0 to disable
+
+  laser_min_range: -1.0     # [default: -1.0] minimum scan range to be considered; -1.0 will cause the laser's reported minimum range to be used
+  laser_max_range: -1.0     # [default: -1.0] maximum scan range to be considered; -1.0 will cause the laser's reported maximum range to be used
+  laser_z_short: 0.1        # [default: 0.1] mixture weight for the z_short part of the model (not used in likelihood_field model)
+  laser_z_max: 0.05         # [default: 0.05] mixture weight for the z_max part of the model (not used in likelihood_field model)
+  laser_lambda_short: 0.1   # [default: 0.1] exponential decay parameter for z_short part of model (not used in likelihood_field model)
+
+
+  laser_model_type: "likelihood_field"  # [default: "likelihood_field"] which model to use, either beam, likelihood_field, or likelihood_field_prob (same as likelihood_field but incorporates the beamskip feature, if enabled)
+  odom_model_type: "diff-corrected" # [default: "diff"] which model to use, either "diff", "omni", "diff-corrected" or "omni-corrected"
+  tf_broadcast: False       # [default: True] set this to false to prevent amcl from publishing the transform between the global frame and the odometry frame
+
+RosAria:
+  port: "/dev/ttyUSB0"
+  base_link_frame: "$(arg robot_name)_base_link"
+  odom_frame: "$(arg robot_name)_odom"
+  laser_frame: "$(arg robot_name)_laser_scanner"
+  publish_aria_lasers: True
+
+robot_controller:
+  rosbag_recording_base_path: "$(arg rosbag_recording_base_path)"
+  control_loop_rate: 100.0
+  proportional_gain_factor: 0.90
+  enabling_switch: True
+  sim: $(arg use_sim)
+
+joy_node:
+  dev: "/dev/input/js0"
+  autorepeat_rate: 10
+
+uwb:
+  anchors: [{id: 0x127d, loc: [-251, 187, 1530]},
+            {id: 0x1146, loc: [384, 9364, 831]},
+            {id: 0x1169, loc: [197, 19355, 1699]},
+            {id: 0x123c, loc: [8176, 19135, 828]},
+            {id: 0x1232, loc: [8640, 198, 1840]}]
+            # ID of each anchor, plus (x, y, z) in mm
+  tag_loc: [0, 0, 1.054, 0, 0, 0] # (x, y, z, r, p, y) in base_link frame) in m, rad
+  use_pozyx_tracking: True # if True, uses Pozyx's on-board tracking algorithm; otherwise, estimates from UWB only
+  range_protocol: 'precision' # 'precision' or 'fast'; 'fast' might not work w/o changing UWB preamble settings
+  position_filter: 'low-pass' # 'none', 'low-pass', 'average', or 'median'
+  use_cov_param: True # if True, publishes covariances from the parameter server
+  cov_check: False # if True, runs a simple consistency check to get cov matrices instead of publishing
+
+localization_base:
+  two_d_mode: True                    # [default: False] if True, fuses 0 values for all z, roll, and pitch variables
+  publish_tf: True                   # [default: True] if True, publishes transform from world_frame to base_link_frame
+  publish_acceleration: True          # [default: False] if True, publishes linear acceleration
+  permit_corrected_publication: False # [default: False] if True, states are republished on the same time stamp when new (pre-dated) data arrives
+  print_diagnostics: False            # [default: False] if True, publishes diagnostic messages to /diagnostics topic
+
+  map_frame: $(arg map_frame_id)
+  odom_frame: $(arg odom_frame_id)
+  base_link_frame: $(arg base_frame_id)
+  world_frame: $(arg odom_frame_id)
+
+  initial_state: [$(arg initial_pose_x), $(arg initial_pose_y), 0, 0, 0, $(arg initial_pose_yaw),
+                  0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+  use_control: False                  # [default: False] if True, listens to cmd_vel topic to generate an acceleration term used in state prediction; overridden by IMU
+  stamped_control: False              # [default: False] if True, looks for TwistStamped message instead of Twist
+  control_timeout: 0.2                # [default: sensor_timeout] if no control command is received in this amount of time, control-based acceleration ceases to be applied
+  control_config: [True, False, False, False, False, True]  # [default: None/turns off use_control] controls which variables in cmd_vel are used in state prediction ([x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel])
+  acceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: 6x[1.0]] specifies acceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+  deceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: acceleration_limits] specifies deceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+  acceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: 6x[1.0]] controls how fast robot reaches acceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+  deceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: acceleration_gains] controls how fast robot reaches deceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+
+  smooth_lagged_data: True            # [default: False] if True, enables filter to revert to state before lagged measurements and reprocess to current time
+
+  debug: False                        # [default: False] if True, node runs in debug mode
+  debug_out_file: ""                  # [default: "robot_localization_debug.txt"] the file to which debug output is written
+
+  reset_on_time_jump: False           # [default: False] if True, resets filter to uninitialized state when a jump back in time is detected
+  predict_to_current_time: True      # [default: False] if True, filter predicts up to current time step (on top of predict/correct up to latest measurement time)
+  disabled_at_startup: False          # [default: False] if True, does not run the filter on start
+
+  dynamic_process_noise_covariance: False # [default: False] if True, scales process_noise_covariance based on robot velocity
+
+  # odom
+  odom0: "odom_with_cov"                 # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  odom0_config: [False, False, False, False, False, False,                # [default: None] which variables are fused from this message, in order:
+                True, True, False, False, False, True,                # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                False, False, False]                         #  x_accel, y_accel, z_accel]
+  odom0_differential: False                       # [default: False] if True, converts measurement to velocity before fusion
+  odom0_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  odom0_nodelay: False                            # [default: False] sets tcpNoDelay transport hint
+
+  # imu
+  imu0: "uwb/imu"                          # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  imu0_config: [False, False, False, True, True, True,      # [default: None] which variables are fused from this message, in order:
+                False, False, False, True, True, True,      # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                True, True, True]                           #  x_accel, y_accel, z_accel]
+  imu0_differential: False                          # [default: False] if True, converts measurement to velocity before fusion
+  imu0_relative: False                              # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  imu0_nodelay: False                               # [default: False] sets tcpNoDelay transport hint
+  imu0_remove_gravitational_acceleration: True     # [default: False] if True, removes acceleration in z due to gravity from linear acceleration data
+  gravitational_acceleration: 9.80665               # [default: 9.80665 m/s^2] amount of z-acceleration to remove from IMU data
+
+localization_odom:
+  two_d_mode: True                    # [default: False] if True, fuses 0 values for all z, roll, and pitch variables
+  publish_tf: True                   # [default: True] if True, publishes transform from world_frame to base_link_frame
+  publish_acceleration: True          # [default: False] if True, publishes linear acceleration
+  permit_corrected_publication: False # [default: False] if True, states are republished on the same time stamp when new (pre-dated) data arrives
+  print_diagnostics: False            # [default: False] if True, publishes diagnostic messages to /diagnostics topic
+
+  map_frame: $(arg map_frame_id)
+  odom_frame: $(arg odom_frame_id)
+  base_link_frame: $(arg base_frame_id)
+  world_frame: $(arg map_frame_id)
+
+  initial_state: [$(arg initial_pose_x), $(arg initial_pose_y), 0, 0, 0, $(arg initial_pose_yaw),
+                  0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+  use_control: False                  # [default: False] if True, listens to cmd_vel topic to generate an acceleration term used in state prediction; overridden by IMU
+  stamped_control: False              # [default: False] if True, looks for TwistStamped message instead of Twist
+  control_timeout: 0.2                # [default: sensor_timeout] if no control command is received in this amount of time, control-based acceleration ceases to be applied
+  control_config: [True, False, False, False, False, True]  # [default: None/turns off use_control] controls which variables in cmd_vel are used in state prediction ([x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel])
+  acceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: 6x[1.0]] specifies acceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+  deceleration_limits: [0.3, 0, 0, 0, 0, 1.745]    # [default: acceleration_limits] specifies deceleration limits for each velocity ([x_acc, y_acc, z_acc, roll_acc, pitch_acc, yaw_acc])
+  acceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: 6x[1.0]] controls how fast robot reaches acceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+  deceleration_gains: [1, 0, 0, 0, 0, 1]           # [default: acceleration_gains] controls how fast robot reaches deceleration limits ([x_g, y_g, z_g, roll_g, pitch_g, yaw_g])
+
+  smooth_lagged_data: True            # [default: False] if True, enables filter to revert to state before lagged measurements and reprocess to current time
+
+  debug: False                        # [default: False] if True, node runs in debug mode
+  debug_out_file: ""                  # [default: "robot_localization_debug.txt"] the file to which debug output is written
+
+  reset_on_time_jump: False           # [default: False] if True, resets filter to uninitialized state when a jump back in time is detected
+  predict_to_current_time: True      # [default: False] if True, filter predicts up to current time step (on top of predict/correct up to latest measurement time)
+  disabled_at_startup: False          # [default: False] if True, does not run the filter on start
+
+  dynamic_process_noise_covariance: False # [default: False] if True, scales process_noise_covariance based on robot velocity
+
+  # odom
+  odom0: "odom_with_cov"                 # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  odom0_config: [False, False, False, False, False, False,                # [default: None] which variables are fused from this message, in order:
+                True, True, False, False, False, True,                # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                False, False, False]                         #  x_accel, y_accel, z_accel]
+  odom0_differential: False                       # [default: False] if True, converts measurement to velocity before fusion
+  odom0_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  odom0_nodelay: False                            # [default: False] sets tcpNoDelay transport hint
+
+  # imu
+  imu0: "uwb/imu"                          # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  imu0_config: [False, False, False, True, True, True,      # [default: None] which variables are fused from this message, in order:
+                False, False, False, True, True, True,      # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                True, True, True]                           #  x_accel, y_accel, z_accel]
+  imu0_differential: False                          # [default: False] if True, converts measurement to velocity before fusion
+  imu0_relative: False                              # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  imu0_nodelay: False                               # [default: False] sets tcpNoDelay transport hint
+  imu0_remove_gravitational_acceleration: True     # [default: False] if True, removes acceleration in z due to gravity from linear acceleration data
+  gravitational_acceleration: 9.80665               # [default: 9.80665 m/s^2] amount of z-acceleration to remove from IMU data
+
+  # amcl
+  pose0: "amcl_pose"                      # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  pose0_config: [True, True, False, False, False, True,     # [default: None] which variables are fused from this message, in order:
+                False, False, False, False, False, False,  # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                False, False, False]                       #  x_accel, y_accel, z_accel]
+  pose0_differential: True                       # [default: False] if True, converts measurement to velocity before fusion
+  pose0_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  pose0_nodelay: False                            # [default: False] sets tcpNoDelay transport hint
+
+  # uwb
+  pose1: "uwb/pose"                       # [default: n/a] message name; params must be defined sequentially (e.g., do not skip odom1 in favor of odom2)
+  pose1_config: [True, True, False, False, False, False,     # [default: None] which variables are fused from this message, in order:
+                False, False, False, False, False, False,  # [x_pos, y_pos, z_pos, roll, pitch, yaw, x_vel, y_vel, z_vel, roll_vel, pitch_vel, yaw_vel, ]
+                False, False, False]                       #  x_accel, y_accel, z_accel]
+  pose1_differential: False                       # [default: False] if True, converts measurement to velocity before fusion
+  pose1_relative: False                           # [default: False] if True, fuse all measurements relative to first reading from sensor (starts at 0)
+  pose1_nodelay: False                            # [default: False] sets tcpNoDelay transport hint

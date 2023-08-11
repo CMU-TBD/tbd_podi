@@ -1,7 +1,12 @@
 SBPLLatticePlanner:
   environment_type: XYThetaLattice
-  planner_type: ADPlanner
-  allocated_time: 5.0
+  planner_type: ARAPlanner
+  allocated_time: 3.0
   initial_epsilon: 3.0
   forward_search: false
-  timetoturn45degsinplace_secs: 5
+  nominalvel_mpersecs: 1
+  timetoturn45degsinplace_secs: 2.6
+  primitive_filename: "$(find tbd_podi_2dnav)/config/prim_right_angles.mprim"
+  lethal_obstacle: 20
+  number_thetas: 4
+  

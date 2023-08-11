@@ -1,29 +1,120 @@
-TrajectoryPlannerROS:
-  max_vel_x: 0.5 # The maximum forward velocity allowed for the base in meters/sec
-  min_vel_x: 0.025 # The minimum forward velocity allowed for the base in meters/sec.
+TebLocalPlannerROS:
+
+  odom_topic: $(arg odom_topic)
+  map_frame: $(arg map_frame_id)
+    
+  # Trajectory
+  
+  teb_autosize: True
+  dt_ref: 0.2
+  dt_hysteresis: 0.05
+  min_samples: 3
+  global_plan_overwrite_orientation: True
+  global_blan_viapoint_sep: 1.0
+  max_global_plan_lookahead_dist: 3.0
+  feasibility_check_no_poses: 5
+  publish_feedback: True
+  exact_arc_length: True
+    
+  # Robot
+         
+  max_vel_x: 1
+  max_vel_x_backwards: 0.1
+  max_vel_theta: 0.3
+  acc_lim_x: 2
+  acc_lim_theta: 0.5
+  min_turning_radius: 0.0
+  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
+    type: "polygon"
+    #radius: 0.4 # for type "circular"
+    #line_start: [-0.3, 0.0] # for type "line"
+    #line_end: [0.3, 0.0] # for type "line"
+    #front_offset: 0.2 # for type "two_circles"
+    #front_radius: 0.2 # for type "two_circles"
+    #rear_offset: 0.2 # for type "two_circles"
+    #rear_radius: 0.2 # for type "two_circles"
+    vertices: [[0.20, 0.2], [0.20,-0.2], [-0.3,-0.2], [-0.3,0.2]] # for type "polygon"
+
+  # GoalTolerance
+    
+  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.1
+  free_goal_vel: False
+    
+  # Obstacles
+    
+  min_obstacle_dist: 0.1
+  include_costmap_obstacles: False
+  costmap_obstacles_behind_robot_dist: 1.0
+  obstacle_poses_affected: 30
+  costmap_converter_plugin: ""
+  costmap_converter_spin_thread: True
+  costmap_converter_rate: 5
+
+  # Optimization
+    
+  no_inner_iterations: 5
+  no_outer_iterations: 4
+  optimization_activate: True
+  optimization_verbose: False
+  penalty_epsilon: 0.05
+  weight_max_vel_x: 2
+  weight_max_vel_theta: 1
+  weight_acc_lim_x: 1
+  weight_acc_lim_theta: 1
+  weight_kinematics_nh: 1000
+  weight_kinematics_forward_drive: 100
+  weight_kinematics_turning_radius: 1
+  weight_optimaltime: 0.1
+  weight_obstacle: 5
+  weight_dynamic_obstacle: 10 # not in use yet
+  alternative_time_cost: False # not in use yet
+
+  # Homotopy Class Planner
+
+  enable_homotopy_class_planning: False
+  enable_multithreading: True
+  simple_exploration: False
+  max_number_classes: 4
+  roadmap_graph_no_samples: 15
+  roadmap_graph_area_width: 5
+  h_signature_prescaler: 0.5
+  h_signature_threshold: 0.1
+  obstacle_keypoint_offset: 0.1
+  obstacle_heading_threshold: 0.4
+  visualize_hc_graph: False  
+
+
+DWAPlannerROS:
+  max_vel_x: 1 # The maximum forward velocity allowed for the base in meters/sec
+  min_vel_x: 0 # The minimum forward velocity allowed for the base in meters/sec.
   max_vel_theta: 0.9 #The maximum rotational velocity allowed for the base in radians/sec
   min_vel_theta: -0.9 #The minimum rotational velocity allowed for the base in radians/sec
-  min_in_place_vel_theta: 0.5 # default 0.4 # The minimum rotational velocity allowed for the base while performing in-place rotations in radians/sec
-  escape_vel: 0.05 # -0.1 # m/s, the speed used for reversing when unstucking itself
+  min_in_place_vel_theta: 0.25 # default 0.4 # The minimum rotational velocity allowed for the base while performing in-place rotations in radians/sec
+  escape_vel: -0.05 # -0.1 # m/s, the speed used for reversing when unstucking itself
 
   acc_lim_theta: 0.8 #The rotational acceleration limit of the robot in radians/sec^2
-  acc_lim_x: 0.35 #The x acceleration limit of the robot in meters/sec^2
+  acc_lim_x: 8 #The x acceleration limit of the robot in meters/sec^2
 
   yaw_goal_tolerance: 0.1 # 0.25 # rotational tolerance of the controller in radians when achieving its goal
-  xy_goal_tolerance: 0.075 # the translational tolerance of the controller in meters when achieving its goal
+  xy_goal_tolerance: 0.1 # the translational tolerance of the controller in meters when achieving its goal
 
   latch_xy_goal_tolerance: true
   meter_scoring: true #Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells.
-  path_distance_bias: 2.0 # 0.6 # The weighting for how much the controller should stay close to the path it was given, maximal possible value is 5.0
-  goal_distance_bias: 0.6 # 0.8 # The weighting for how much the controller should attempt to reach its local goal, also controls speed, maximal possible value is 5.0
+  path_distance_bias: 5.0 # 0.6 # The weighting for how much the controller should stay close to the path it was given, maximal possible value is 5.0
+  goal_distance_bias: 1.0 # 0.8 # The weighting for how much the controller should attempt to reach its local goal, also controls speed, maximal possible value is 5.0
   occdist_scale: 0.01 # 0.01 # how much the controller should attempt to avoid obstacles 
 
   sim_granularity: 0.05 # the map is this size
   angular_sim_granularity: 0.047 
 
-  heading_scoring: false
+  sim_time: 1.7 #120
+
+  heading_scoring: true
   heading_scoring_timestep: 1
 
-  dwa: false
-  use_dwa: false
+  vx_samples: 10
+  vth_samples: 21
+
+  dwa: true
   holonomic_robot: false #Determines whether velocity commands are generated for a holonomic or non-holonomic robot.

@@ -95,6 +95,7 @@ find_package(catkin REQUIRED COMPONENTS
 generate_dynamic_reconfigure_options(
   cfg/HumanLayerPlugin.cfg
   cfg/InteractionLayerPlugin.cfg
+  cfg/OpenSpaceLayerPlugin.cfg
 )
 
 ###################################
@@ -133,6 +134,7 @@ include_directories(
 add_library(TBDlayers
   plugins/human_layer.cpp
   plugins/interaction_space_layer.cpp
+  plugins/open_space_layer.cpp
 )
 
 add_dependencies(TBDlayers ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

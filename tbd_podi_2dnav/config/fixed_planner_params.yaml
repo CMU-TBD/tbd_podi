@@ -1,0 +1,94 @@
+footprint: [[0.20, 0.2], [0.20,-0.2], [-0.3,-0.2], [-0.3,0.2]]
+obstacle_layer:
+  obstacle_range: 3.0 #The maximum range in meters at which to insert obstacles into the costmap using sensor data. # If less then this value, it is an obstacle
+  raytrace_range: 5.0 #The maximum range in meters at which to raytrace out obstacles from the map using sensor data. # maintain this value away from obstacle
+  transform_tolerance: 0.3 # 0.3 is the default
+  observation_sources: laser_scan_sensor
+  laser_scan_sensor: {
+    sensor_frame: podi_laser_scanner, 
+    data_type: LaserScan, 
+    topic: /podi/laser, 
+    marking: true, 
+    clearing: true,
+    expected_update_rate: 10,
+    observation_keep_time: 0.2
+  }
+
+global_costmap:
+  global_frame: podi_map
+  robot_base_frame: podi_base_link
+  update_frequency: 5.0
+  publish_frequency: 2.5
+  plugins:
+    - { name: static_layer, type: "costmap_2d::StaticLayer" }
+    - { name: open_space_layer, type: "tbd_costmap::OpenSpaceLayer"}
+    - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" }
+    - { name: inflation_layer, type: "costmap_2d::InflationLayer" }
+
+  inflation_layer:
+    inflation_radius: 5 # default (0.55) # In meters
+    cost_scaling_factor: 5 # default (10.0)
+
+  open_space_layer:
+    range_preferred: 0.6
+    range_max: 0.8
+    cost_weight: 0.95
+
+local_costmap:
+  global_frame: podi_odom
+  robot_base_frame: podi_base_link
+  update_frequency: 15.0 #The frequency in Hz for the map to be updated.
+  publish_frequency: 2.5 #The frequency in Hz for the map to be publish display information.
+  resolution: 0.05
+  rolling_window: true #Whether or not to use a rolling window version of the costmap.
+  plugins:
+    - { name: static_layer, type: "costmap_2d::StaticLayer" }
+    - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" }
+    - { name: inflation_layer, type: "costmap_2d::InflationLayer" }
+
+SBPLLatticePlanner:
+  environment_type: XYThetaLattice
+  planner_type: ARAPlanner
+  allocated_time: 5.0
+  initial_epsilon: 3.0
+  forward_search: false
+  nominalvel_mpersecs: 1
+  timetoturn45degsinplace_secs: 2.6
+  primitive_filename: "$(find tbd_podi_2dnav)/config/prim_right_angles.mprim"
+  lethal_obstacle: 20
+  number_thetas: 4
+
+TebLocalPlannerROS:
+  odom_topic: $(arg odom_topic)
+  map_frame: $(arg map_frame_id)
+
+  # Robot
+  max_vel_x: 1.5
+  max_vel_x_backwards: 0.1
+  max_vel_theta: 1.5 # 75% of v/r
+  acc_lim_x: 0.5
+  acc_lim_theta: 0.3
+  min_turning_radius: 0.0
+  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
+    type: "polygon"
+    #radius: 0.4 # for type "circular"
+    #line_start: [-0.3, 0.0] # for type "line"
+    #line_end: [0.3, 0.0] # for type "line"
+    #front_offset: 0.2 # for type "two_circles"
+    #front_radius: 0.2 # for type "two_circles"
+    #rear_offset: 0.2 # for type "two_circles"
+    #rear_radius: 0.2 # for type "two_circles"
+    vertices: [[0.20, 0.2], [0.20,-0.2], [-0.3,-0.2], [-0.3,0.2]] # for type "polygon"
+
+  # Goal Tolerance
+  free_goal_vel: False
+
+  # Trajectory
+  teb_autosize: True
+  publish_feedback: False
+  exact_arc_length: False
+
+  # Optimization
+  optimization_activate: True
+  optimization_verbose: False
+  weight_kinematics_turning_radius: 1

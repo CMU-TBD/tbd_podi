@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100</updateRate>
+      <leftJoint>$(arg robot_name)_left_wheel_joint</leftJoint>
+      <rightJoint>$(arg robot_name)_right_wheel_joint</rightJoint>
+      <wheelSeparation>0.316</wheelSeparation>
+      <wheelDiameter>0.18</wheelDiameter>
+      <wheelTorque>15</wheelTorque>
+      <publishWheelJointState>true</publishWheelJointState>
+      <publishWheelTF>false</publishWheelTF>
+      <publishOdom>true</publishOdom>
+      <publishOdomTF>true</publishOdomTF>
+      <publishTf>true</publishTf>
+      <rosDebugLevel>na</rosDebugLevel>
+      <wheelAcceleration>1</wheelAcceleration>
+      <commandTopic>/RosAria/cmd_vel</commandTopic> <!-- We choose to name it to match the robot's IRL command name-->
+      <odometryTopic>$(arg robot_name)/odom</odometryTopic>
+      <odometryFrame>$(arg robot_name)_odom</odometryFrame>
+      <robotBaseFrame>$(arg robot_name)_base_link</robotBaseFrame>
+      <odometrySource>world</odometrySource>      <!-- The options are world and encoder. World means getting it straight from Gazebo -->
+      <!-- Zhi (2021-04-12) We use the world instead of encoder because the odometry is so much more worse in simulation for some reason. 
+      When Podi turns, the whole laser map is moved by nearly 45 degrees which is unrealistics. If you can figure out the difference. Dropping
+      to encoder might eventually make sense.
+      Possibly an issue with wheelbase distance.-->
+    </plugin>
+   
+    <!-- ground truth -->
+    <!-- <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <bodyName>"$(arg robot_name)_base_link"</bodyName>
+      <topicName>${robotname}/pose_ground_truth</topicName>
+      <gaussianNoise>0.01</gaussianNoise>
+      <frameName>map</frameName>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+    </plugin> -->
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)_laser_scanner">
+    <sensor type="ray" name="lms100x">
+      <pose>0 0 0 0 0 0</pose>
+      <!-- <visualize>true</visualize> -->
+      <update_rate>25</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>540</samples>
+            <resolution>0.5</resolution>
+            <min_angle>-1.9634954</min_angle>
+            <max_angle>1.9634954</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.05</min>
+          <max>20.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="$(arg robot_name)_front_lidar_controller" filename="libgazebo_ros_laser.so">
+        <topicName>${robotname}/laser</topicName>
+        <frameName>$(arg robot_name)_laser_scanner</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)_display">
+    <visual>
+      <plugin name="screen_video_controller" filename="libgazebo_ros_video.so">
+        <height>1280</height>
+        <width>720</width>
+        <topicName>screen_face</topicName>
+        <robotNamespace>$(arg robot_name)</robotNamespace>
+      </plugin>
+    </visual>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)_front_camera_left_camera_frame">
+    <sensor type="depth" name="front_depth_camera">
+      <update_rate>30.0</update_rate>
+      <camera name="front_camera">
+        <horizontal_fov>1.57079632679</horizontal_fov>
+        <image>
+          <width>1920</width>
+          <height>1080</height>
+          <format>R8G8B8</format>
+        </image>
+      </camera>
+      <plugin name="head_depth_camera" filename="libgazebo_ros_depth_camera.so">
+        <cameraName>front_camera</cameraName>
+        <frameName>$(arg robot_name)_front_camera_left_camera_optical_frame</frameName>
+        <robotNamespace>${robotname}</robotNamespace>
+        <pointCloudCutoff>2.0</pointCloudCutoff>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- <gazebo reference="zed_left_camera_frame">
+    <gravity>true</gravity>
+    <sensor type="imu_sensor" name="azure_imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>      
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <robotNamespace>${robotname}</robotNamespace>
+        <topicName>imu</topicName>
+        <bodyName>${robotname}/camera_base</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>${robotname}/camera_base</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo> -->
+
+</robot>

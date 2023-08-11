@@ -1,0 +1,90 @@
+<launch>
+<arg name = "use_sim" default = "true" />
+
+<!-- common args -->
+<arg name = "robot_name" default = "podi" />
+<arg name = "xacro" default="$(find tbd_podi_description)/urdf/podi.urdf_planner.xacro"/>
+<arg name = "rosbag_recording_base_path" default="$(find tbd_podi_common)/bagfiles/" />
+<arg name = "launch_rviz" default="True" />
+<arg name = "output" default="screen" />
+<arg name = "motor_cmd_topic" default="/RosAria/cmd_vel" />
+<arg name = "planner_cmd_topic" default="/RosAria/cmd_vel" /> <!--nav_cmd_vel-->
+<arg name = "laser_topic" default="laser" />
+
+<!-- sim args -->
+<arg name="rviz_config_path" default="$(find tbd_podi_gazebo)/rviz/localization.rviz" />
+
+<arg name="model_name" default="podi" />
+<arg name="model_x" default="1" />
+<arg name="model_y" default="4" />
+<arg name="model_z" default="0" />
+<arg name="model_yaw" default="1.5708" />
+	
+<arg name="debug" value="False" />
+<arg name="gui" value="True" />
+<arg name="paused" value="False"/>
+<arg name="use_sim_time" value="True"/>
+<arg name="headless" value="False"/>
+<arg name="world_name" value="$(find tbd_podi_gazebo)/worlds/tcs_testwall.world"/>
+
+<!-- nav args -->
+<arg name = "map_name"		default = "tcs_testwall.yaml" />
+<arg name = "map_path"		default = "$(find tbd_podi_2dnav)/maps/$(arg map_name)" />
+	
+<arg name = "initial_pose_x"	default = "$(arg model_x)" />
+<arg name = "initial_pose_y"	default = "$(arg model_y)" />
+<arg name = "initial_pose_yaw"	default = "$(arg model_yaw)" />	
+	
+<arg name = "odom_frame_id"	default = "$(arg robot_name)_odom" />
+<arg name = "base_frame_id"	default = "$(arg robot_name)_base_link" />
+<arg name = "map_frame_id"	default = "$(arg robot_name)_map" />
+
+<arg name = "odom_topic" default = "odom" />
+
+
+<!-- Load parameters -->
+<group ns = "$(arg robot_name)">
+	<rosparam file="$(find tbd_podi_common)/config/tuning_params_fixed.yaml" command = "load" subst_value = "True"/>
+	<rosparam file="$(find tbd_podi_common)/config/tuning_params_best.yaml" command = "load" subst_value = "True"/>
+	<param name="robot_description" command="$(find xacro)/xacro $(arg xacro)" />
+</group>
+
+<!-- Spawn Gazebo elements -->
+<include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args = "true"/>
+<node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg model_name) -x $(arg model_x) -y $(arg model_y) -z $(arg model_z) -Y $(arg model_yaw) -param $(arg robot_name)/robot_description" respawn="false" output="screen" />
+
+<!-- Launch robot nodes -->
+<group ns = "$(arg robot_name)">
+	<!-- robot_state (publishes transforms between links) -->
+	<node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "robot_state_publisher" output="$(arg output)"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	
+	<!-- map_server (publishes map) -->
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_path)"/>
+
+	<!-- keeps odom frame at map -->
+    <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 1 $(arg map_frame_id) $(arg odom_frame_id) 100"/>
+
+	<!-- sends control-->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" required="true">
+		<rosparam file="$(find tbd_podi_2dnav)/config/fixed_planner_params.yaml" command="load" subst_value = "True"/>
+		<rosparam file="$(find tbd_podi_2dnav)/config/tuning_local_planner_params.yaml" command="load" subst_value = "True"/>
+
+		<!--<param name="base_global_planner"  value="navfn/NavfnROS" />-->
+		<param name="base_global_planner" value="SBPLLatticePlanner" />
+		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+
+        <remap from="cmd_vel" to="$(arg planner_cmd_topic)" />
+        <remap from="odom" to="$(arg odom_topic)" />
+        <remap from="laser" to="$(arg laser_topic)" />
+    </node>
+
+	<!-- waypoints -->
+	<node name="waypoint_sender" pkg="tbd_podi_2dnav" type="drive_waypoints.py" args="$(arg use_sim) $(arg model_name)" required="True"/>
+	
+</group>
+
+<!-- rviz (visualize) -->
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_path)" required="true" if="$(arg launch_rviz)"/>
+
+</launch>

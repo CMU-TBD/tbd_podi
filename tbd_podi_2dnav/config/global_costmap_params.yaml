@@ -5,7 +5,11 @@ global_costmap:
   publish_frequency: 2.5
   plugins:
     - { name: static_layer, type: "costmap_2d::StaticLayer" }
-    # - { name: human_layer, type: "tbd_costmap::HumanLayer" }
-    # - { name: interaction_space_layer, type: "tbd_costmap::InteractionSpaceLayer" }
+    - { name: open_space_layer, type: "tbd_costmap::OpenSpaceLayer"}
     - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" }
     - { name: inflation_layer, type: "costmap_2d::InflationLayer" }
+
+  open_space_layer:
+    range_preferred: 0.6
+    range_max: 0.8
+    cost_weight: 0.95

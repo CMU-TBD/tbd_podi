@@ -22,14 +22,6 @@ class odomDummy:
                                         [0, 0, 0, 1e-06, 0, 0],
                                         [0, 0, 0, 0, 1e-06, 0],
                                         [0, 0, 0, 0, 0, 1e-06]])
-            
-            
-                                #np.array([[6.5e-05, 0, 0, 0, 0, 0],
-                              #          [0, 3.6e-04, 0, 0, 0, 0],
-                              #          [0, 0, 2.2e-04, 0, 0, 0],
-                              #          [0, 0, 0, 1e-6, 0, 0],
-                              #          [0, 0, 0, 0, 1e-6, 0],
-                              #          [0, 0, 0, 0, 0, 1e-6]])#np.diag([.05, .05, .05, 0, 0, 0])
         else:
             self.covariance = cov
 
@@ -80,12 +72,7 @@ class odomDummy:
                 msgOdom.header = self.currentOdomTrue.header
                 msgOdom.pose.pose = self.addGaussianNoise(self.currentOdomTrue.pose)
 
-                msgOdom.pose.covariance = np.array([[3e-01, 0, 0, 0, 0, 0],
-                                                    [0, 3e-01, 0, 0, 0, 0],
-                                                    [0, 0, 3e-01, 0, 0, 0],
-                                                    [0, 0, 0, 1e-06, 0, 0],
-                                                    [0, 0, 0, 0, 1e-06, 0], 
-                                                    [0, 0, 0, 0, 0, 1e-06]]).flatten('C') #float64[36] row-major representation of 6x6 cov matrix
+                msgOdom.pose.covariance = np.diag(rospy.get_param('uwb/pose_cov')).flatten('C') #float64[36] row-major representation of 6x6 cov matrix
 
                 self.odomPubNoisy.publish(msgOdom)
                 self.odomPubTrue.publish(self.currentOdomTrue)

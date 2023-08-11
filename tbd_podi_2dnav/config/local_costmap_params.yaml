@@ -1,7 +1,7 @@
 local_costmap:
   global_frame: podi_odom
   robot_base_frame: podi_base_link
-  update_frequency: 5.0 #The frequency in Hz for the map to be updated.
+  update_frequency: 15.0 #The frequency in Hz for the map to be updated.
   publish_frequency: 2.5 #The frequency in Hz for the map to be publish display information.
   width: 3 #The width of the map in meters.
   height: 3 #The height of the map in meters.
@@ -9,7 +9,5 @@ local_costmap:
   rolling_window: true #Whether or not to use a rolling window version of the costmap.
   plugins:
     - { name: static_layer, type: "costmap_2d::StaticLayer" }
-    # - { name: human_layer, type: "tbd_costmap::HumanLayer" }
-    # - { name: interaction_space_layer, type: "tbd_costmap::InteractionSpaceLayer" }
     - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" }
     - { name: inflation_layer, type: "costmap_2d::InflationLayer" }

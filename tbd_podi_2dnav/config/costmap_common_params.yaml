@@ -11,8 +11,8 @@ obstacle_range: 3.0 #The maximum range in meters at which to insert obstacles in
 raytrace_range: 5.0 #The maximum range in meters at which to raytrace out obstacles from the map using sensor data. # maintain this value away from obstacle
 
 # For costmap_2d::InflationLayer
-inflation_radius: 0.5 # default (0.55) # In meters
-cost_scaling_factor: 40 # default (10.0)
+inflation_radius: 5 # default (0.55) # In meters
+cost_scaling_factor: 5 # default (10.0)
 
 
 # --- These parameters are set to their correct level
@@ -38,15 +38,3 @@ obstacle_layer:
     expected_update_rate: 10,
     observation_keep_time: 0.2
   }
-
-# tbd_costmap::HumanLayer
-
-human_layer:
-  ignore_time_stamp: false
-  inflation: 0.4
-
-
-# tbd_costmap::InteractionSpaceLayer
-
-interaction_space_layer:
-  ignore_time_stamp: false

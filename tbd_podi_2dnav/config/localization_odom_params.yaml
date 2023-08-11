@@ -1,8 +1,8 @@
-frequency: 10                       # [default: 30] the real valued frequency, in Hz, at which the filter produces a state estimate
+frequency: 30                       # [default: 30] the real valued frequency, in Hz, at which the filter produces a state estimate
 sensor_timeout: .25                 # [default: 0.033333333] the real-valued period, in seconds, after which we consider any sensor to have timed out; inverse of minimum frequency
 two_d_mode: True                    # [default: False] if True, fuses 0 values for all z, roll, and pitch variables
-transform_time_offset: 0            # [default: 0] future-dates transform timestamps by this amount
-transform_timeout: 0                # [default: 0] how long to wait if a transformation is not available yet
+transform_time_offset: 0.05            # [default: 0] future-dates transform timestamps by this amount
+transform_timeout: 0.05                # [default: 0] how long to wait if a transformation is not available yet
 publish_tf: True                  # [default: True] if True, publishes transform from world_frame to base_link_frame
 publish_acceleration: True          # [default: False] if True, publishes linear acceleration
 permit_corrected_publication: False # [default: False] if True, states are republished on the same time stamp when new (pre-dated) data arrives
@@ -32,7 +32,7 @@ debug: False                        # [default: False] if True, node runs in deb
 debug_out_file: ""                  # [default: "robot_localization_debug.txt"] the file to which debug output is written
 
 reset_on_time_jump: False           # [default: False] if True, resets filter to uninitialized state when a jump back in time is detected
-predict_to_current_time: False      # [default: False] if True, filter predicts up to current time step (on top of predict/correct up to latest measurement time)
+predict_to_current_time: True      # [default: False] if True, filter predicts up to current time step (on top of predict/correct up to latest measurement time)
 disabled_at_startup: False          # [default: False] if True, does not run the filter on start
 
 process_noise_covariance: [0.05, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
