@@ -88,8 +88,8 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>49 199000000</sim_time>
-      <real_time>49 436859926</real_time>
+      <sim_time>00 000000000</sim_time>
+      <real_time>00 000000000</real_time>
       <wall_time>1690908381 57591086</wall_time>
       <iterations>49199</iterations>
       <model name='Cardboard_Bin'>

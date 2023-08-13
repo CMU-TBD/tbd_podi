@@ -68,7 +68,7 @@
 	<!-- sends control-->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" required="true">
 		<rosparam file="$(find tbd_podi_2dnav)/config/fixed_planner_params.yaml" command="load" subst_value = "True"/>
-		<rosparam file="$(find tbd_podi_2dnav)/config/tuning_local_planner_params.yaml" command="load" subst_value = "True"/>
+		<rosparam file="$(find tbd_podi_2dnav)/config/tuning_local_planner_params_best_res.yaml" command="load" subst_value = "True"/>
 
 		<!--<param name="base_global_planner"  value="navfn/NavfnROS" />-->
 		<param name="base_global_planner" value="SBPLLatticePlanner" />
@@ -80,7 +80,7 @@
     </node>
 
 	<!-- waypoints -->
-	<node name="waypoint_sender" pkg="tbd_podi_2dnav" type="drive_waypoints.py" args="$(arg use_sim) $(arg model_name)" required="True"/>
+	<node name="waypoint_sender" pkg="tbd_podi_2dnav" type="drive_waypoints.py" args="$(arg use_sim) $(arg model_name)" output="log" required="True"/>
 	
 </group>
 

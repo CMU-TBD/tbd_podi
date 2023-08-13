@@ -54,7 +54,7 @@ SBPLLatticePlanner:
   forward_search: false
   nominalvel_mpersecs: 1
   timetoturn45degsinplace_secs: 2.6
-  primitive_filename: "$(find tbd_podi_2dnav)/config/prim_right_angles.mprim"
+  primitive_filename: "$(find tbd_podi_2dnav)/config/prims_test.mprim"
   lethal_obstacle: 20
   number_thetas: 4
 
@@ -63,7 +63,7 @@ TebLocalPlannerROS:
   map_frame: $(arg map_frame_id)
 
   # Robot
-  max_vel_x: 1.5
+  max_vel_x: 3.5
   max_vel_x_backwards: 0.1
   max_vel_theta: 1.5 # 75% of v/r
   acc_lim_x: 0.5

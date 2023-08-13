@@ -1,0 +1,44 @@
+local_costmap:
+  inflation_layer:
+    inflation_radius: 1 # default (0.55) # In meters
+    cost_scaling_factor: 5 # default (10.0)
+  width: 3 #The width of the map in meters.
+  height: 3 #The height of the map in meters.
+
+
+TebLocalPlannerROS:
+  # GoalTolerance    
+  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.1
+
+  # Trajectory
+  dt_ref: 0.2
+  dt_hysteresis: 0.05
+  min_samples: 3
+  global_plan_overwrite_orientation: False
+  global_plan_viapoint_sep: .1
+  max_global_plan_lookahead_dist: 3.0
+  feasibility_check_no_poses: 5
+    
+  # Obstacles    
+  min_obstacle_dist: 0.1
+  include_costmap_obstacles: True
+  costmap_obstacles_behind_robot_dist: 1.0
+  obstacle_poses_affected: 30
+  inflation_dist: 0.1
+
+  # Optimization
+  no_inner_iterations: 5
+  no_outer_iterations: 4
+  penalty_epsilon: 0.05
+  weight_max_vel_x: 2
+  weight_max_vel_theta: 1
+  weight_acc_lim_x: 1
+  weight_acc_lim_theta: 1
+  weight_kinematics_nh: 1000
+  weight_kinematics_forward_drive: 100
+  weight_optimaltime: 0.1
+  weight_obstacle: 5
+  weight_viapoint: 10
+  weight_inflation: 0.1
+  weight_adapt_factor: 2.0

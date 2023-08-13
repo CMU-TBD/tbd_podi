@@ -1,0 +1,15 @@
+local_costmap:
+  inflation_layer: {inflation_radius: 0.9777996905661074, cost_scaling_factor: 44.403529442109175}
+  width: 2.794270336453756
+  height: 4.8399824440975125
+TebLocalPlannerROS: {xy_goal_tolerance: 0.013191554284422534, yaw_goal_tolerance: 0.4594166930245725,
+  dt_ref: 0.38093266672223536, dt_hysteresis: 0.04336469279399341, min_samples: 3,
+  global_plan_overwrite_orientation: false, global_plan_viapoint_sep: 0.08578776322556358,
+  max_global_plan_lookahead_dist: 0.30168935608053377, feasibility_check_no_poses: 4,
+  min_obstacle_dist: 0.14747835430362866, include_costmap_obstacles: true, costmap_obstacles_behind_robot_dist: 0.3662440425096344,
+  obstacle_poses_affected: 24, inflation_dist: 0.09109465123473176, no_inner_iterations: 9,
+  no_outer_iterations: 1, penalty_epsilon: 0.05019589015517036, weight_max_vel_x: 64.79804161048284,
+  weight_max_vel_theta: 49.97085304265114, weight_acc_lim_x: 27.41728554357291, weight_acc_lim_theta: 15.307567538000217,
+  weight_kinematics_nh: 9758.563858220197, weight_kinematics_forward_drive: 1044.4145753022162,
+  weight_optimaltime: 2.490722095856293, weight_obstacle: 8.358697035210287, weight_viapoint: 61.0745807404928,
+  weight_inflation: 0.05656012560189774, weight_adapt_factor: 1.8314281288157035}
